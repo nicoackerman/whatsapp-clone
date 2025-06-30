@@ -121,7 +121,15 @@ const messages: Message[] = [
 ];
 
 export default function WhatsAppClone() {
-  const [selectedChat, setSelectedChat] = useState<Chat>(chats[0] as Chat);
+  const [selectedChat, setSelectedChat] = useState<Chat>({
+    id: 1,
+    name: "Sarah Johnson",
+    avatar: "/placeholder.svg?height=40&width=40",
+    lastMessage: "Hey! How are you doing?",
+    time: "10:30",
+    unread: 2,
+    online: true,
+  });
   const [newMessage, setNewMessage] = useState("");
   const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
 
