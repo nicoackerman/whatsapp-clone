@@ -2,6 +2,8 @@
 
 import type React from "react";
 
+import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
+import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { useState } from "react";
 import {
   Search,
@@ -189,9 +191,14 @@ export default function WhatsAppClone() {
         <div className="border-b border-gray-200 bg-gray-50 p-4">
           <div className="mb-4 flex items-center justify-between">
             <h1 className="text-xl font-semibold text-gray-800">WhatsApp</h1>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-5 w-5" />
-            </Button>
+            <div className="flex items-center">
+              <Authenticated>
+                <UserButton />
+              </Authenticated>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
           <div className="relative">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
@@ -199,6 +206,20 @@ export default function WhatsAppClone() {
               placeholder="Search or start new chat"
               className="bg-white pl-10"
             />
+          </div>
+          <div className="flex justify-between py-2">
+            <AuthLoading>
+              <p>Loading</p>
+            </AuthLoading>
+
+            <Unauthenticated>
+              <SignInButton />
+              <SignUpButton>
+                <button className="h-7 cursor-pointer rounded-sm bg-green-600 text-white sm:h-8 sm:px-3 sm:text-base">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </Unauthenticated>
           </div>
         </div>
 
