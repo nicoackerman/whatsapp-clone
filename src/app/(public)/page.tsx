@@ -1,6 +1,8 @@
+"use client";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
+import { Skeleton } from "~/components/ui/skeleton";
 import {
   MessageCircle,
   Phone,
@@ -12,8 +14,11 @@ import {
   Star,
   Check,
   Menu,
+  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export default function WhatsAppLanding() {
   return (
@@ -75,20 +80,36 @@ export default function WhatsAppLanding() {
               calls, and share moments with end-to-end encryption.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Button
-                size="lg"
-                className="bg-[#25D366] px-8 text-white hover:bg-[#128C7E]"
-              >
-                <Download className="mr-2 h-5 w-5" />
-                Download Now
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#25D366] bg-transparent text-[#25D366] hover:bg-[#25D366] hover:text-white"
-              >
-                Try Web Version
-              </Button>
+              <Unauthenticated>
+                <SignInButton>
+                  <Button
+                    size="lg"
+                    className="bg-[#25D366] px-8 text-white hover:bg-[#128C7E]"
+                  >
+                    Sign In
+                  </Button>
+                </SignInButton>
+                <SignUpButton>
+                  <Button
+                    size="lg"
+                    className="bg-[#25D366] px-8 text-white hover:bg-[#128C7E]"
+                  >
+                    Sign Up
+                  </Button>
+                </SignUpButton>
+              </Unauthenticated>
+              <Authenticated>
+                <Link
+                  href="/dashboard"
+                  className="flex flex-row items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-[#25D366]"
+                >
+                  Go to dashboard
+                  <ArrowRight />
+                </Link>
+              </Authenticated>
+              <AuthLoading>
+                <Skeleton className="h-10 w-60 rounded-md bg-[#34ba65]" />
+              </AuthLoading>
             </div>
           </div>
         </section>
