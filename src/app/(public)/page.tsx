@@ -103,8 +103,8 @@ export default function WhatsAppLanding() {
                   href="/dashboard"
                   className="flex flex-row items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-[#25D366]"
                 >
-                  Go to dashboard
                   <ArrowRight />
+                  Go to dashboard
                 </Link>
               </Authenticated>
               <AuthLoading>

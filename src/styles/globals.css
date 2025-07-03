@@ -1,10 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
@@ -47,6 +48,14 @@
 }
 
 :root {
+  --container: oklch(1 0 0);
+  --left-panel: oklch(0.187 0.02 262);
+  --gray-primary: oklch(0.957 0.015 269);
+  --gray-secondary: oklch(0.957 0.015 269);
+  --left-panel-light: oklch(1 0 0);
+  --chat-hover: oklch(0.969 0.01 180);
+  --green-primary: oklch(0.453 0.23 177);
+  --green-chat: oklch(0.931 0.14 132);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -82,6 +91,15 @@
 }
 
 .dark {
+  --container: oklch(0.078 0.015 245);
+  --gray-primary: oklch(0.16 0.02 245);
+  --gray-secondary: oklch(0.17 0.02 245);
+  --left-panel: oklch(0.1 0.02 262);
+  --chat-hover: oklch(0.16 0.02 245);
+  --green-primary: oklch(0.453 0.23 177);
+  --green-secondary: oklch(0.52 0.27 174);
+  --green-chat: oklch(0.21 0.19 178);
+  --gray-tertiary: oklch(0.21 0.02 260);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -114,10 +132,22 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+@layer components {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--gray-primary));
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: hsl(var(--container));
+  }
+}
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
