@@ -76,7 +76,7 @@ export default function WhatsAppLanding() {
               </Unauthenticated>
               <Authenticated>
                 <Link
-                  href="/dashboard"
+                  href="/dashboard/messaging"
                   className="flex flex-row items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-[#25D366] dark:text-white"
                 >
                   <ArrowRight />
