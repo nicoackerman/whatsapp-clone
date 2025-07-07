@@ -12,67 +12,69 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "~/components/ui/sidebar";
-import {
-  MessageSquareIcon,
-  PersonStandingIcon,
-  MoreVertical,
-  MessagesSquare,
-  Users,
-} from "lucide-react";
+import { MessagesSquare, Users, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { Button } from "~/components/ui/button";
 import { ModeToggle } from "~/components/ui/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import type { JSX } from "react";
+import {
+  SidebarSectionItem,
+  type SectionOption,
+} from "~/features/sidebar/SectionItem";
+
+const APP_SECTIONS: SectionOption[] = [
+  {
+    icon: MessagesSquare,
+    tooltip: "Messages",
+    identifier: "messages",
+    type: "link",
+  },
+  {
+    icon: Users,
+    tooltip: "Contacts",
+    identifier: "contacts",
+    type: "link",
+  },
+  {
+    icon: <ModeToggle />,
+    tooltip: "Toogle Theme Mode",
+    identifier: "tooglemode",
+    type: "action",
+  },
+];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "3.5rem",
+          "--sidebar-width-mobile": "20rem",
+        } as React.CSSProperties
+      }
+    >
       <Sidebar>
         <SidebarContent>
-          <aside className="flex size-full flex-row">
-            {/* App sections */}
-            <div className="flex h-full w-1/4 flex-col items-center justify-between px-2 py-4 dark:bg-[#1D1F1F]">
-              <div className="flex flex-col items-center gap-3">
-                <Button className="size-9 rounded-full bg-transparent hover:bg-gray-200/10 dark:text-white">
-                  <MessagesSquare className="size-4" />
-                </Button>
-                <Button className="bg-dark:text-white size-9 rounded-full bg-transparent hover:bg-gray-200/10 dark:text-white">
-                  <Users className="size-4" />
-                </Button>
-                <Button className="size-9 rounded-full bg-transparent hover:bg-gray-200/10 dark:text-white">
-                  <ModeToggle />
-                </Button>
-              </div>
-              <div>
-                <UserButton />
-              </div>
-            </div>
-            {/* Chat list */}
-            <div className="flex h-full flex-grow flex-col px-2 py-4 dark:bg-[#121313]">
-              {/* Chat Header */}
-              <div className="flex justify-between">
-                <h1>WhatsApp</h1>
-                <Button className="bg-transparent hover:bg-gray-200/10 dark:text-white rounded-full">
-                  <MoreVertical className="size-5" />
-                </Button>
-              </div>
-              {/* Chat options */}
-              <div className="flex grow flex-col justify-start">
-                <Button className="flex items-center justify-between gap-3 bg-transparent p-4 hover:bg-gray-200/10 dark:text-white">
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3>Felipe</h3>
-                    <p className="line-clamp-1">I just asked bla bla</p>
-                  </div>
-                </Button>
-              </div>
-            </div>
-          </aside>
+          <SidebarMenu className="flex flex-col items-center space-y-3 py-4">
+            {APP_SECTIONS.map((section) => {
+              return (
+                <SidebarSectionItem
+                  key={section.identifier}
+                  section={section}
+                />
+              );
+            })}
+          </SidebarMenu>
         </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu className="flex flex-col items-center">
+            <SidebarMenuItem>
+              <UserButton />
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
       </Sidebar>
       <main>
         <SidebarTrigger />
