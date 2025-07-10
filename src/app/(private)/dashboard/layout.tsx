@@ -1,53 +1,24 @@
+"use client";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
 } from "~/components/ui/sidebar";
-import { MessagesSquare, Users, type LucideIcon } from "lucide-react";
-import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
-import { Button } from "~/components/ui/button";
-import { ModeToggle } from "~/components/ui/mode-toggle";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import type { JSX } from "react";
+import { SidebarSectionItem } from "~/features/sidebar/SectionItem";
 import {
-  SidebarSectionItem,
-  type SectionOption,
-} from "~/features/sidebar/SectionItem";
-
-const APP_SECTIONS: SectionOption[] = [
-  {
-    icon: MessagesSquare,
-    tooltip: "Messages",
-    identifier: "messages",
-    type: "link",
-  },
-  {
-    icon: Users,
-    tooltip: "Contacts",
-    identifier: "contacts",
-    type: "link",
-  },
-  {
-    icon: <ModeToggle />,
-    tooltip: "Toogle Theme Mode",
-    identifier: "tooglemode",
-    type: "action",
-  },
-];
+  APP_SECTIONS,
+  type SectionOptionObj,
+  type SectionIdentifier,
+} from "~/features/sidebar/config";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider
+      currentPanelId={"messages"}
       style={
         {
           "--sidebar-width": "3.5rem",
@@ -58,14 +29,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarContent>
           <SidebarMenu className="flex flex-col items-center space-y-3 py-4">
-            {APP_SECTIONS.map((section) => {
-              return (
-                <SidebarSectionItem
-                  key={section.identifier}
-                  section={section}
-                />
-              );
-            })}
+            {Object.entries(APP_SECTIONS).map(([identifier, section]) => (
+              <SidebarSectionItem
+                key={identifier as SectionIdentifier}
+                section={section as SectionOptionObj}
+                identifier={identifier as SectionIdentifier}
+              />
+            ))}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -76,10 +46,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
-      <main>
-        <SidebarTrigger />
-        {children}
-      </main>
+      <main className="w-full">{children}</main>
     </SidebarProvider>
   );
 }

@@ -1,41 +1,45 @@
+"use client";
 import type { LucideIcon } from "lucide-react";
-import type { JSX } from "react";
+import { useRef, type JSX } from "react";
 import { Button } from "~/components/ui/button";
-import { SidebarMenuButton, SidebarMenuItem } from "~/components/ui/sidebar";
+import type { PanelIdentifier } from "~/features/panels/config";
+import {
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "~/components/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-
-interface SectionLink {
-  icon: LucideIcon;
-  tooltip: string;
-  identifier: string;
-  type: "link";
-}
-interface SectionAction {
-  icon: JSX.Element;
-  tooltip: string;
-  identifier: string;
-  type: "action";
-}
-
-type SectionOption = SectionAction | SectionLink;
-
+import { type SectionIdentifier, type SectionOptionObj } from "./config";
 function SidebarSectionItem({
+  identifier,
   section,
   ...props
-}: React.ComponentProps<"li"> & { section: SectionOption }) {
+}: React.ComponentProps<"li"> & {
+  identifier: SectionIdentifier;
+  section: SectionOptionObj;
+  key: SectionIdentifier;
+}) {
+  const { setPanel } = useSidebar();
   switch (section.type) {
     case "link": {
       const Icon = section.icon;
+      const panelRef = useRef<PanelIdentifier>(identifier);
       return (
         <SidebarMenuItem {...props}>
-          <SidebarMenuButton className="hover:bg-transparent">
+          <SidebarMenuButton className="hover:bg-transparent active:bg-transparent">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button className="bg-dark:text-white size-8 rounded-full bg-transparent hover:bg-gray-200/10 dark:text-white">
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPanel(panelRef.current);
+                  }}
+                  className="bg-dark:text-white size-8 rounded-full bg-transparent hover:bg-gray-200/10 focus:bg-gray-200/10 dark:text-white"
+                >
                   {" "}
                   <Icon className="size-4" />
                 </Button>
@@ -52,8 +56,8 @@ function SidebarSectionItem({
     case "action":
       return (
         <SidebarMenuItem {...props}>
-          <SidebarMenuButton className="hover:bg-transparent">
-            {section.icon}
+          <SidebarMenuButton className="hover:bg-transparent active:bg-transparent">
+            <div>{section.icon}</div>
           </SidebarMenuButton>
         </SidebarMenuItem>
       );
