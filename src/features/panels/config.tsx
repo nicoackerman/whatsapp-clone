@@ -1,5 +1,6 @@
 import React, { type JSX } from "react";
-
+import { RightChatPanel } from "../chat/ChatPanels";
+import { LeftChatPanel } from "../chat/LeftChatPanel";
 // Handles the names of the app sections
 type PanelIdentifier = "messages" | "contacts";
 type AppPanelRecord = Record<PanelIdentifier, BiPanelObj>;
@@ -13,8 +14,8 @@ interface BiPanelObj {
 // This avoids repetion mistakes
 const APP_PANELS: AppPanelRecord = {
   messages: {
-    leftPanel: <div>messages left</div>,
-    rightPanel: <div>messages right</div>,
+    leftPanel: <LeftChatPanel />,
+    rightPanel: <RightChatPanel />,
   },
   contacts: {
     leftPanel: <div>contacts left</div>,

@@ -41,7 +41,7 @@ function SidebarSectionItem({
                   className="bg-dark:text-white size-8 rounded-full bg-transparent hover:bg-gray-200/10 focus:bg-gray-200/10 dark:text-white"
                 >
                   {" "}
-                  <Icon className="size-4" />
+                  <Icon className="size-5" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

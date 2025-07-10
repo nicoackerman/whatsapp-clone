@@ -1,5 +1,5 @@
 "use client";
-import { MessagesSquare, Users, type LucideIcon } from "lucide-react";
+import { Compass, MessagesSquare, type LucideIcon } from "lucide-react";
 import { type JSX } from "react";
 import { ModeToggle } from "~/components/ui/mode-toggle";
 import type { PanelIdentifier } from "~/features/panels/config";
@@ -29,7 +29,7 @@ const APP_SECTIONS: AppSectionsRecord = {
     type: "link",
   },
   contacts: {
-    icon: Users,
+    icon: Compass,
     tooltip: "Contacts",
     type: "link",
   },
