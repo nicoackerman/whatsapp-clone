@@ -1,6 +1,5 @@
 "use client";
-import type { LucideIcon } from "lucide-react";
-import { useRef, type JSX } from "react";
+import { useRef } from "react";
 import { Button } from "~/components/ui/button";
 import type { PanelIdentifier } from "~/features/panels/config";
 import {
@@ -14,6 +13,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { type SectionIdentifier, type SectionOptionObj } from "./config";
+
 function SidebarSectionItem({
   identifier,
   section,
@@ -23,10 +23,11 @@ function SidebarSectionItem({
   section: SectionOptionObj;
 }) {
   const { setPanel } = useSidebar();
+  const sectionIdentifier = useRef<SectionIdentifier>(identifier);
   switch (section.type) {
     case "link": {
       const Icon = section.icon;
-      const panelRef = useRef<PanelIdentifier>(identifier as PanelIdentifier);
+      const selectedPanel = sectionIdentifier.current as PanelIdentifier;
       return (
         <SidebarMenuItem {...props}>
           <SidebarMenuButton className="hover:bg-transparent active:bg-transparent">
@@ -35,7 +36,7 @@ function SidebarSectionItem({
                 <Button
                   onClick={(e) => {
                     e.preventDefault();
-                    setPanel(panelRef.current);
+                    setPanel(selectedPanel);
                   }}
                   className="bg-dark:text-white size-8 rounded-full bg-transparent hover:bg-gray-200/10 focus:bg-gray-200/10 dark:text-white"
                 >

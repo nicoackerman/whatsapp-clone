@@ -6,22 +6,16 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(date_ms: number) {
-  // Convert milliseconds to seconds
-  let date_seconds = date_ms / 1000;
+  const date_seconds = date_ms / 1000;
+  const date_obj = new Date(date_seconds * 1000);
 
-  // Convert to Date object
-  let date_obj = new Date(date_seconds * 1000);
+  const current_date = new Date();
+  current_date.setHours(0, 0, 0, 0);
+  const current_time = current_date.getTime();
 
-  // Get current date and time
-  let current_date = new Date();
-  current_date.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
-  let current_time = current_date.getTime();
+  const provided_date = new Date(date_obj);
+  provided_date.setHours(0, 0, 0, 0);
 
-  // Get the date part of the provided date
-  let provided_date = new Date(date_obj);
-  provided_date.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
-
-  // Check if it's today
   if (provided_date.getTime() === current_time) {
     return date_obj.toLocaleTimeString([], {
       hour: "2-digit",
@@ -30,17 +24,15 @@ export function formatDate(date_ms: number) {
     });
   }
 
-  // Check if it's yesterday
-  let yesterday = new Date();
+  const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  yesterday.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
+  yesterday.setHours(0, 0, 0, 0);
   if (provided_date.getTime() === yesterday.getTime()) {
     return "Yesterday";
   }
 
-  // Check if it's a different day of the week
   if (provided_date.getDay() < current_date.getDay()) {
-    let days = [
+    const days = [
       "Sunday",
       "Monday",
       "Tuesday",
@@ -52,7 +44,6 @@ export function formatDate(date_ms: number) {
     return days[provided_date.getDay()];
   }
 
-  // If none of the above conditions match, return in a different format
   return (
     provided_date.getMonth() +
     1 +
@@ -73,13 +64,20 @@ export const isSameDay = (timestamp1: number, timestamp2: number): boolean => {
   );
 };
 
-// Define getRelativeDateTime function
-export const getRelativeDateTime = (message: any, previousMessage: any) => {
+// Define a type for the message object
+interface Message {
+  _creationTime: number;
+}
+
+export const getRelativeDateTime = (
+  message: Message,
+  previousMessage?: Message,
+): string | undefined => {
   const today = new Date();
   const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setDate(today.getDate() - 1);
   const lastWeek = new Date(today);
-  lastWeek.setDate(lastWeek.getDate() - 7);
+  lastWeek.setDate(today.getDate() - 7);
 
   const messageDate = new Date(message._creationTime);
 
@@ -105,16 +103,18 @@ export const getRelativeDateTime = (message: any, previousMessage: any) => {
       return messageDate.toLocaleDateString(undefined, options);
     }
   }
+
+  return undefined;
 };
 
 export function randomID(len: number) {
   let result = "";
   if (result) return result;
-  var chars = "12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP",
-    maxPos = chars.length,
-    i;
+  const chars =
+    "12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP";
+  const maxPos = chars.length;
   len = len || 5;
-  for (i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) {
     result += chars.charAt(Math.floor(Math.random() * maxPos));
   }
   return result;

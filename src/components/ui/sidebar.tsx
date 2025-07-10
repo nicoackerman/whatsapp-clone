@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { PanelLeftIcon, type LucideIcon } from "lucide-react";
+import { PanelLeftIcon } from "lucide-react";
 
 import { useIsMobile } from "~/hooks/use-mobile";
 import { cn } from "~/lib/utils";
@@ -102,13 +102,9 @@ function SidebarProvider({
   }, [isMobile, setOpen, setOpenMobile]);
 
   // Helper to change curret panel view.
-  const setPanel = React.useCallback(
-    (newPanel: PanelIdentifier) => {
-      console.log(newPanel);
-      setCurrentPanelId(newPanel);
-    },
-    [currentPanelId, setCurrentPanelId],
-  );
+  const setPanel = React.useCallback((newPanel: PanelIdentifier) => {
+    setCurrentPanelId(newPanel);
+  }, []);
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
