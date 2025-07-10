@@ -31,8 +31,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <SidebarMenu className="flex flex-col items-center space-y-3 py-4">
             {Object.entries(APP_SECTIONS).map(([identifier, section]) => (
               <SidebarSectionItem
-                key={identifier as SectionIdentifier}
-                section={section as SectionOptionObj}
+                key={identifier}
+                section={section}
                 identifier={identifier as SectionIdentifier}
               />
             ))}
