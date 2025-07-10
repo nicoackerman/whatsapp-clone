@@ -21,13 +21,12 @@ function SidebarSectionItem({
 }: React.ComponentProps<"li"> & {
   identifier: SectionIdentifier;
   section: SectionOptionObj;
-  key: SectionIdentifier;
 }) {
   const { setPanel } = useSidebar();
   switch (section.type) {
     case "link": {
       const Icon = section.icon;
-      const panelRef = useRef<PanelIdentifier>(identifier);
+      const panelRef = useRef<PanelIdentifier>(identifier as PanelIdentifier);
       return (
         <SidebarMenuItem {...props}>
           <SidebarMenuButton className="hover:bg-transparent active:bg-transparent">
@@ -64,4 +63,4 @@ function SidebarSectionItem({
   }
 }
 
-export { type SectionOption, SidebarSectionItem };
+export { SidebarSectionItem };
