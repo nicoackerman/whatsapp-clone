@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { type SectionIdentifier, type SectionOptionObj } from "./config";
+import { BubbleIcon } from "~/components/ui/bubble-icon";
 
 function SidebarSectionItem({
   identifier,
@@ -35,8 +36,7 @@ function SidebarSectionItem({
                 }}
                 className="bg-dark:text-white size-8 rounded-full bg-transparent hover:bg-gray-200/10 focus:bg-gray-200/10 dark:text-white"
               >
-                {" "}
-                <Icon className="size-5" />
+                <BubbleIcon Icon={Icon}/>
               </Button>
             </TooltipTrigger>
             <TooltipContent>

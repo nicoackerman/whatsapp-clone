@@ -12,11 +12,11 @@ function AppPanel() {
   }, [currentPanelId]);
 
   return (
-    <section className="flex h-screen w-full flex-row">
-      <article className="h-full w-2/7 border-x-1 border-gray-700 bg-[#161717] p-3">
+    <section className="flex h-screen flex-grow flex-row">
+      <article className="h-screen w-2/7 border-x-1 border-gray-700 bg-[#161717] p-3">
         {currentPanel.leftPanel}
       </article>
-      <article className="h-screen flex-grow bg-[#161717] p-3">
+      <article className="h-screen grow bg-[#161717]">
         {currentPanel.rightPanel}
       </article>
     </section>
