@@ -1,11 +1,9 @@
 import { Avatar } from "~/components/ui/avatar";
 import { Paperclip, Mic, Smile, Send } from "lucide-react";
+import { useChatStore } from "../hooks/useChatStore";
 
-interface ChatThreadProps {
-  conversationId: number;
-}
-export function ChatThread(props: ChatThreadProps) {
-  const { conversationId } = props;
+export function ChatThread() {
+  
   return (
     <div className="flex h-full flex-col bg-gray-100 dark:bg-zinc-900">
       {/* Header */}

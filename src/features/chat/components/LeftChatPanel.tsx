@@ -1,7 +1,7 @@
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { PreviewChatBox } from "./PreviewChatBox";
 import { MoreVertical } from "lucide-react";
-
+import { conversations } from "./dummy-data";
 export function LeftChatPanel() {
   return (
     <div className="flex h-full grow flex-col justify-start space-y-7">
@@ -11,12 +11,9 @@ export function LeftChatPanel() {
       </div>
       <ScrollArea className="h-[700px] w-full whitespace-nowrap">
         <div className="flex grow flex-col space-y-3">
-          <PreviewChatBox />
-          <PreviewChatBox />
-          <PreviewChatBox />
-          <PreviewChatBox />
-          <PreviewChatBox />
-          <PreviewChatBox />
+          {conversations.map((conversation) => (
+            <PreviewChatBox key={conversation._id} threadId={conversation._id} />
+          ))}
         </div>
       </ScrollArea>
     </div>

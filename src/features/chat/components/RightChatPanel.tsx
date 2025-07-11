@@ -2,13 +2,13 @@
 import React from "react";
 import { ChatPanelPlaceHolder } from "./ChatPanelPlaceholder";
 import { ChatThread } from "./ChatThread";
-
+import { useChatStore } from "../hooks/useChatStore";
 export function RightChatPanel() {
-  const selectedConversation = 1;
+  const currentThreadId = useChatStore((state) => state.currentThreadId);
 
-  if (!selectedConversation) {
+  if (currentThreadId == "placeholder") {
     return <ChatPanelPlaceHolder />;
   }
 
-  return <ChatThread conversationId={selectedConversation} />;
+  return <ChatThread />;
 }

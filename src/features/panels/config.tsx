@@ -1,6 +1,6 @@
 import React, { type JSX } from "react";
-import { RightChatPanel } from "../chat/ChatPanels";
-import { LeftChatPanel } from "../chat/LeftChatPanel";
+import { RightChatPanel } from "../chat/components/RightChatPanel";
+import { LeftChatPanel } from "../chat/components/LeftChatPanel";
 // Handles the names of the app sections
 type PanelIdentifier = "messages" | "contacts";
 type AppPanelRecord = Record<PanelIdentifier, BiPanelObj>;
