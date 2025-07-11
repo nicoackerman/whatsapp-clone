@@ -2,11 +2,7 @@
 import { useRef } from "react";
 import { Button } from "~/components/ui/button";
 import type { PanelIdentifier } from "~/features/panels/config";
-import {
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "~/components/ui/sidebar";
+import { SidebarMenuItem, useSidebar } from "~/components/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
@@ -30,25 +26,23 @@ function SidebarSectionItem({
       const selectedPanel = sectionIdentifier.current as PanelIdentifier;
       return (
         <SidebarMenuItem {...props}>
-          <SidebarMenuButton className="hover:bg-transparent active:bg-transparent">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setPanel(selectedPanel);
-                  }}
-                  className="bg-dark:text-white size-8 rounded-full bg-transparent hover:bg-gray-200/10 focus:bg-gray-200/10 dark:text-white"
-                >
-                  {" "}
-                  <Icon className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{section.tooltip}</p>
-              </TooltipContent>
-            </Tooltip>
-          </SidebarMenuButton>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPanel(selectedPanel);
+                }}
+                className="bg-dark:text-white size-8 rounded-full bg-transparent hover:bg-gray-200/10 focus:bg-gray-200/10 dark:text-white"
+              >
+                {" "}
+                <Icon className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{section.tooltip}</p>
+            </TooltipContent>
+          </Tooltip>
         </SidebarMenuItem>
       );
     }
@@ -56,9 +50,7 @@ function SidebarSectionItem({
     case "action":
       return (
         <SidebarMenuItem {...props}>
-          <SidebarMenuButton className="hover:bg-transparent active:bg-transparent">
-            <div>{section.icon}</div>
-          </SidebarMenuButton>
+          <div>{section.icon}</div>
         </SidebarMenuItem>
       );
   }
