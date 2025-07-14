@@ -1,119 +1,89 @@
-export const conversations = [
+export interface Message {
+  _id: string;
+  messageType: "text" | "image" | "audio" | "video"; // puedes expandir si es necesario
+  content: string;
+  sender: string;
+}
+
+export interface Thread {
+  _id: string;
+  threadImage: string;
+  threadName: string;
+  participants: string[];
+  _creationTime: number; // Unix timestamp
+  lastMessage: Message;
+  isOnline: boolean;
+}
+
+export const threads: Thread[] = [
   {
     _id: "1",
-    admin: "user1",
-    groupImage: null,
-    groupName: "Group A",
-    participants: ["user1", "user2", "user3"],
-    _creationTime: 1638232272, // Unix timestamp for 2021-11-30 12:04:32 UTC
+    threadImage: "https://github.com/shadcn.png",
+    threadName: "Pepe",
+    participants: ["Nicolas", "Pepe"],
+    _creationTime: 1638232272, // 2021-11-30 12:04:32 UTC
     lastMessage: {
       _id: "1",
       messageType: "text",
-      content: "Hello everyone!",
-      sender: "user1",
+      content: "Hello!",
+      sender: "Pepe",
     },
-    sender: "user1",
     isOnline: true,
   },
   {
     _id: "2",
-    admin: null,
-    groupImage: "https://avatars.githubusercontent.com/u/75279146?v=4",
-    groupName: null,
-    participants: ["user4", "user5"],
-    _creationTime: 1638235872, // Unix timestamp for 2021-11-30 13:04:32 UTC
+    threadImage: "https://github.com/shadcn.png",
+    threadName: "Laura",
+    participants: ["Nicolas", "Laura"],
+    _creationTime: 1641024000, // 2022-01-01 00:00:00 UTC
     lastMessage: {
       _id: "2",
       messageType: "text",
-      content: "Hey there!",
-      sender: "user2",
+      content: "Are you coming to the meeting?",
+      sender: "Laura",
     },
-    sender: "user4",
-    isOnline: true,
+    isOnline: false,
   },
   {
     _id: "3",
-    admin: null,
-    groupImage: null,
-    groupName: null,
-    participants: ["user6", "user7"],
-    _creationTime: 1638239472, // Unix timestamp for 2021-11-30 14:04:32 UTC
+    threadImage: "https://github.com/shadcn.png",
+    threadName: "Team Devs",
+    participants: ["Nicolas", "Sofia", "Carlos", "Leo"],
+    _creationTime: 1643655600, // 2022-02-01 14:00:00 UTC
     lastMessage: {
       _id: "3",
       messageType: "image",
-      content: "image_url.jpg",
-      sender: "user6",
+      content: "project-preview.png",
+      sender: "Carlos",
     },
-    sender: "user6",
-    isOnline: false,
+    isOnline: true,
   },
   {
     _id: "4",
-    admin: null,
-    groupImage:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png",
-    groupName: null,
-    participants: ["user8", "user9", "user10"],
-    _creationTime: 1638243072, // Unix timestamp for 2021-11-30 15:04:32 UTC
+    threadImage: "https://github.com/shadcn.png",
+    threadName: "Mom",
+    participants: ["Nicolas", "Mom"],
+    _creationTime: 1651334400, // 2022-05-01 00:00:00 UTC
     lastMessage: {
       _id: "4",
-      messageType: "video",
-      content: "video_url.mp4",
-      sender: "user9",
+      messageType: "text",
+      content: "Don’t forget your appointment!",
+      sender: "Mom",
     },
-    sender: "user9",
-    isOnline: true,
-  },
-];
-
-export const messages = [
-  {
-    _id: "1",
-    content: "Hello everyone!",
-    sender: "user1",
-    messageType: "text",
-  },
-  {
-    _id: "2",
-    content: "Hey there!",
-    sender: "user2",
-    messageType: "text",
-  },
-  {
-    _id: "3",
-    content: "How's it going!?",
-    sender: "user1",
-    messageType: "text",
-  },
-  {
-    _id: "4",
-    content: "Fine, thanks!",
-    sender: "user2",
-    messageType: "text",
-  },
-];
-
-export const users = [
-  {
-    _id: "user1",
-    name: "John Doe",
-    email: "johndoe@email.com",
-    image: "https://randomuser.me/api/portraits/men/67.jpg",
-    admin: true,
-    isOnline: true,
-  },
-  {
-    _id: "user2",
-    name: "Jane Doe",
-    email: "janedoe@email.com",
-    image: "https://randomuser.me/api/portraits/women/67.jpg",
-    isOnline: true,
-  },
-  {
-    _id: "user3",
-    name: "Alice",
-    email: "alice@email.com",
-    image: "https://randomuser.me/api/portraits/women/68.jpg",
     isOnline: false,
+  },
+  {
+    _id: "5",
+    threadImage: "https://github.com/shadcn.png",
+    threadName: "Alex",
+    participants: ["Nicolas", "Alex"],
+    _creationTime: 1654012800, // 2022-06-01 00:00:00 UTC
+    lastMessage: {
+      _id: "5",
+      messageType: "text",
+      content: "Got the files, thanks!",
+      sender: "Nicolas",
+    },
+    isOnline: true,
   },
 ];
