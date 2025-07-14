@@ -1,6 +1,9 @@
 import React, { type JSX } from "react";
 import { RightChatPanel } from "../chat/components/RightChatPanel";
 import { LeftChatPanel } from "../chat/components/LeftChatPanel";
+import { LeftExplorePanel } from "../explore/components/LeftExplorePanel";
+import { RightExplorePanel } from "../explore/components/RightExplorePanel";
+
 // Handles the names of the app sections
 type PanelIdentifier = "messages" | "contacts";
 type AppPanelRecord = Record<PanelIdentifier, BiPanelObj>;
@@ -18,8 +21,8 @@ const APP_PANELS: AppPanelRecord = {
     rightPanel: <RightChatPanel />,
   },
   contacts: {
-    leftPanel: <div>contacts left</div>,
-    rightPanel: <div>contacts right</div>,
+    leftPanel: <LeftExplorePanel/>,
+    rightPanel: <RightExplorePanel/>,
   },
 };
 
