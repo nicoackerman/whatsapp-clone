@@ -31,19 +31,18 @@ function ChatThreadHeader({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const currentThreadId = useChatStore((state) => state.currentThreadId);
-  const { threadImage, threadName, isOnline } = threads.find(
-    (t) => t._id == currentThreadId,
+  const currentThreadMeta = useChatStore(
+    (state) => state.currentThreadMeta,
   ) as Thread;
 
   return (
     <div className={cn("flex justify-between", className)} {...props}>
       <div className="flex items-center gap-4">
         <Avatar className="size-10">
-          <AvatarImage src={threadImage} />
+          <AvatarImage src={currentThreadMeta.threadImage} />
           <AvatarFallback>User</AvatarFallback>
         </Avatar>
-        <p className="text-lg font-bold">{threadName}</p>
+        <p className="text-lg font-bold">{currentThreadMeta.threadName}</p>
       </div>
       <div className="flex items-center gap-3">
         <BubbleIcon variant="gray" Icon={SearchIcon} />
