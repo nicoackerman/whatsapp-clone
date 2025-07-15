@@ -23,7 +23,10 @@ export function UserPreviewBox(props: UserPreviewBoxProps) {
       {user.isContact ? (
         <BubbleIcon Icon={CheckIcon} />
       ) : (
-        <Button variant="outline" className="rounded-full cursor-pointer">
+        <Button
+          variant="outline"
+          className="cursor-pointer rounded-full px-6 py-0"
+        >
           Add
         </Button>
       )}

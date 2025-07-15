@@ -17,9 +17,9 @@ export function PreviewChatBox(props: PreviewChatBoxProps) {
   const threadId = thread._id;
 
   const isCurrentChat = currentThreadId == threadId;
-  const activeClass = isCurrentChat ? "bg-gray-200/10" : "bg-transparent";
+  const activeClass = isCurrentChat ? "bg-ghost-gray" : "bg-transparent";
   const baseClass =
-    "cursor-pointer flex items-center justify-between gap-3 bg-transparent p-4 hover:bg-gray-200/10 dark:text-white h-14";
+    "cursor-pointer flex items-center justify-between gap-3 bg-transparent p-4 hover:bg-ghost-gray dark:text-white h-15";
 
   return (
     <Button
@@ -33,8 +33,10 @@ export function PreviewChatBox(props: PreviewChatBoxProps) {
         <AvatarFallback>User</AvatarFallback>
       </Avatar>
       <div className="flex grow flex-col items-start">
-        <h3 className="text-base font-bold">{thread.threadName}</h3>
-        <p className="line-clamp-1">{thread.lastMessage.content}</p>
+        <h3 className="text-base dark:text-white">{thread.threadName}</h3>
+        <span className="text-soft-gray line-clamp-1 dark:text-soft-white">
+          {thread.lastMessage.content}
+        </span>
       </div>
     </Button>
   );

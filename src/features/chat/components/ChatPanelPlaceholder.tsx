@@ -1,28 +1,30 @@
 import React from "react";
 import { Lock } from "lucide-react";
 import Image from "next/image";
-import { Button } from "~/components/ui/button";
 
 export function ChatPanelPlaceHolder() {
   return (
-    <div className="bg-gray-secondary flex size-full flex-col items-center justify-center py-10">
-      <div className="flex w-full flex-col items-center justify-center gap-4 py-10">
+    <div className="flex size-full flex-col items-center justify-center bg-[#F7F5F3] px-8 py-10 dark:bg-[#1e2020]">
+      <div className="flex grow flex-col items-center justify-center gap-4">
         <Image src={"/desktop-hero.png"} alt="Hero" width={320} height={188} />
-        <p className="mt-5 mb-2 text-3xl font-extralight">
-          Download WhatsApp for Windows
-        </p>
-        <p className="text-gray-primary text-muted-foreground w-1/2 text-center text-sm">
-          Make calls, share your screen and get a faster experience when you
-          download the Windows app.
-        </p>
-
-        <Button className="bg-green-primary hover:bg-green-secondary my-5 rounded-full">
-          Get from Microsoft Store
-        </Button>
+        <div className="flex flex-col items-center">
+          <p className="mt-5 mb-2 text-center text-3xl font-extralight">
+            WhatsApp Web
+          </p>
+          <span className="text-soft-gray w-3/4 text-center text-sm dark:text-soft-white">
+            Send and receive messages without keeping your phone online.
+          </span>
+          <span className="text-soft-gray w-3/4 text-center text-sm dark:text-soft-white">
+            Use WhatsApp on up to 4 linked devices and 1 phone at the same time.
+          </span>
+        </div>
       </div>
-      <p className="text-gray-primary text-muted-foreground mt-auto flex w-1/2 items-center justify-center gap-1 text-center text-xs">
-        <Lock size={10} /> Your personal messages are end-to-end encrypted
-      </p>
+      <div className="flex items-center justify-center gap-2">
+        <Lock size={20} />
+        <p className="text-soft-gray text-center text-xs dark:text-soft-white">
+          Your personal messages are end-to-end encrypted
+        </p>
+      </div>
     </div>
   );
 }

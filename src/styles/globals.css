@@ -3,6 +3,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-soft-gray: oklch(0 0 0 / 60%);
+  --color-soft-white: oklch(1 0 0 / 0.6);
+  --color-ghost-gray: oklch(0.6274 0.0554 257.62 / 0.2);
+}
+
 :root {
   --container: oklch(1 0 0);
   --left-panel: oklch(0.187 0.02 262);

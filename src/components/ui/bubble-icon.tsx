@@ -4,11 +4,11 @@ import React from "react";
 import { cn } from "~/lib/utils";
 
 const bubbleVariants = cva(
-  "flex size-10 cursor-pointer items-center justify-center rounded-full",
+  "flex size-8 cursor-pointer items-center justify-center rounded-full",
   {
     variants: {
       variant: {
-        gray: "bg-transparent hover:bg-gray-200/10 focus:bg-gray-200/10",
+        gray: "bg-transparent hover:bg-ghost-gray focus:bg-ghost-gray",
         green: "bg-green-500 hover:bg-green-500/50 text-black",
       },
       defaultVariants: {

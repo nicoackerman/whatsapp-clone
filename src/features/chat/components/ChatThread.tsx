@@ -8,10 +8,10 @@ import { cn } from "~/lib/utils";
 
 export function ChatThread() {
   return (
-    <div className="flex h-screen w-full flex-col dark:bg-[url(public/bg-dark.png)]">
-      <ChatThreadHeader className="p-4 dark:bg-[#161717]" />
+    <div className="flex h-screen w-full flex-col bg-[url(public/bg-light.png)] dark:bg-[url(public/bg-dark.png)]">
+      <ChatThreadHeader className="border border-gray-700/10 bg-white p-4 dark:bg-[#161717]" />
       <ChatThreadContent className="" />
-      <ChatThreadInput className="gap-2 rounded-full px-4 py-1 dark:bg-[#1e2020]" />
+      <ChatThreadInput className="gap-2 rounded-full bg-white px-4 py-1 dark:bg-[#1e2020]" />
     </div>
   );
 }
@@ -42,7 +42,7 @@ function ChatThreadHeader({
           <AvatarImage src={currentThreadMeta.threadImage} />
           <AvatarFallback>User</AvatarFallback>
         </Avatar>
-        <p className="text-lg font-bold">{currentThreadMeta.threadName}</p>
+        <p className="text-base">{currentThreadMeta.threadName}</p>
       </div>
       <div className="flex items-center gap-3">
         <BubbleIcon variant="gray" Icon={SearchIcon} />
@@ -57,7 +57,7 @@ function ChatThreadInput({ className, ...props }: React.ComponentProps<"div">) {
     <div className="bg-transparent px-2 py-4">
       <div className={cn("flex w-full justify-between", className)} {...props}>
         <BubbleIcon variant="gray" Icon={StickerIcon} />
-        <Input className="w-full border-none bg-transparent text-white focus:ring-0 focus:outline-none" />
+        <Input placeholder="Type a message" className="w-full border-none bg-transparent text-white focus:ring-0 focus:outline-none" />
         <BubbleIcon variant="green" Icon={SendIcon} />
       </div>
     </div>

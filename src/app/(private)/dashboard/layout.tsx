@@ -11,7 +11,6 @@ import { UserButton } from "@clerk/nextjs";
 import { SidebarSectionItem } from "~/features/sidebar/SectionItem";
 import {
   APP_SECTIONS,
-  type SectionOptionObj,
   type SectionIdentifier,
 } from "~/features/sidebar/config";
 
@@ -27,7 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       }
     >
       <Sidebar>
-        <SidebarContent>
+        <SidebarContent className="bg-[##F7F5F3] dark:bg-[#1e2020]">
           <SidebarMenu className="flex flex-col items-center space-y-3 py-4">
             {Object.entries(APP_SECTIONS).map(([identifier, section]) => (
               <SidebarSectionItem

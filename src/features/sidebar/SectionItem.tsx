@@ -34,12 +34,12 @@ function SidebarSectionItem({
                   e.preventDefault();
                   setPanel(selectedPanel);
                 }}
-                className="bg-dark:text-white size-8 rounded-full bg-transparent hover:bg-gray-200/10 focus:bg-gray-200/10 dark:text-white"
+                className="bg-dark:text-white hover:bg-ghost-gray focus:bg-ghost-gray size-8 rounded-full bg-transparent text-black dark:text-white"
               >
-                <BubbleIcon Icon={Icon}/>
+                <BubbleIcon Icon={Icon} />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent side="right">
               <p>{section.tooltip}</p>
             </TooltipContent>
           </Tooltip>
