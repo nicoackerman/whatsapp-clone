@@ -1,8 +1,14 @@
-import React, { type JSX } from "react";
+import React, { lazy, type JSX } from "react";
 import { RightChatPanel } from "../chat/components/RightChatPanel";
 import { LeftChatPanel } from "../chat/components/LeftChatPanel";
-import { LeftExplorePanel } from "../explore/components/LeftExplorePanel";
-import { RightExplorePanel } from "../explore/components/RightExplorePanel";
+
+// Lazy load for secondary panels
+const LeftExplorePanel = lazy(
+  () => import("../explore/components/LeftExplorePanel"),
+);
+const RightExplorePanel = lazy(
+  () => import("../explore/components/RightExplorePanel"),
+);
 
 // Handles the names of the app sections
 type PanelIdentifier = "messages" | "contacts";
@@ -13,7 +19,7 @@ interface BiPanelObj {
   rightPanel: JSX.Element;
 }
 
-// Reconrd type does not allow multiple key panels to be the same
+// Record type does not allow multiple key panels to be the same
 // This avoids repetion mistakes
 const APP_PANELS: AppPanelRecord = {
   messages: {
@@ -21,8 +27,8 @@ const APP_PANELS: AppPanelRecord = {
     rightPanel: <RightChatPanel />,
   },
   contacts: {
-    leftPanel: <LeftExplorePanel/>,
-    rightPanel: <RightExplorePanel/>,
+    leftPanel: <LeftExplorePanel />,
+    rightPanel: <RightExplorePanel />,
   },
 };
 

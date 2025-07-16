@@ -3,7 +3,7 @@ import { LockIcon, UsersIcon } from "lucide-react";
 
 export function ExplorePanelPlaceHolder() {
   return (
-    <div className="flex size-full flex-col items-center justify-center bg-[#F7F5F3] px-8 py-10 dark:bg-[#1e2020]">
+    <div className="flex size-full flex-col items-center justify-center px-8 py-10">
       <UsersIcon className="mb-6 size-15 text-gray-400" />
 
       <h2 className="mb-2 text-2xl font-semibold">Create communities</h2>
