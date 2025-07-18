@@ -12,7 +12,7 @@ const useChatStore = create<ChatStoreSchema>((set) => ({
   currentThreadId: "placeholder",
   currentThreadMeta: null,
   setThreadId(newThreadId) {
-    const newThreadMeta = threads.find((t: Thread) => t._id == newThreadId) as Thread;
+    const newThreadMeta = threads.find((t: Thread) => t._id == newThreadId)!;
     set({ currentThreadId: newThreadId, currentThreadMeta: newThreadMeta });
   },
 }));

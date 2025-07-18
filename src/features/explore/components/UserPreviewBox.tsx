@@ -23,7 +23,7 @@ export function UserPreviewBox(props: { user: Doc<"users"> }) {
         className="cursor-pointer rounded-full px-6 py-0"
         onClick={(e: React.MouseEvent<HTMLButtonElement>)=> {
           e.preventDefault();
-          addContact({userId: user._id})
+          void addContact({userId: user._id})
         }}
       >
         Add

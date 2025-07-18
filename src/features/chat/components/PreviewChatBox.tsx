@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import { useChatStore, type ThreadId } from "../hooks/useChatStore";
+import { useChatStore } from "../hooks/useChatStore";
 import clsx from "clsx";
 import type { Thread } from "./dummy-data";
 
@@ -34,7 +34,7 @@ export function PreviewChatBox(props: PreviewChatBoxProps) {
       </Avatar>
       <div className="flex grow flex-col items-start">
         <h3 className="text-base dark:text-white">{thread.threadName}</h3>
-        <span className="text-soft-gray line-clamp-1 dark:text-soft-white">
+        <span className="text-soft-gray dark:text-soft-white line-clamp-1">
           {thread.lastMessage.content}
         </span>
       </div>
