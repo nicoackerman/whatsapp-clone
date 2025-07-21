@@ -4,10 +4,10 @@ import { LeftChatPanel } from "../chat/components/LeftChatPanel";
 
 // Lazy load for secondary panels
 const LeftExplorePanel = lazy(
-  () => import("../explore/components/LeftExplorePanel"),
+  () => import("../explore/components/panels/LeftExplorePanel"),
 );
 const RightExplorePanel = lazy(
-  () => import("../explore/components/RightExplorePanel"),
+  () => import("../explore/components/panels/RightExplorePanel"),
 );
 
 // Handles the names of the app sections

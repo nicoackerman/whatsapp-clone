@@ -11,7 +11,7 @@ interface PreviewChatBoxProps {
 
 interface ChatPreviewDisplay {
   onView: boolean;
-  thread: any;
+  thread: Thread;
   setAsCurrentThread: (newThreadId: ThreadId) => void;
 }
 
