@@ -14,6 +14,16 @@ import {
   type SectionIdentifier,
 } from "~/features/sidebar/config";
 
+function SidbarItemsList() {
+  return Object.entries(APP_SECTIONS).map(([identifier, section]) => (
+    <SidebarSectionItem
+      key={identifier}
+      section={section}
+      identifier={identifier as SectionIdentifier}
+    />
+  ));
+}
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider
@@ -28,13 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarContent className="bg-[##F7F5F3] dark:bg-[#1e2020]">
           <SidebarMenu className="flex flex-col items-center space-y-3 py-4">
-            {Object.entries(APP_SECTIONS).map(([identifier, section]) => (
-              <SidebarSectionItem
-                key={identifier}
-                section={section}
-                identifier={identifier as SectionIdentifier}
-              />
-            ))}
+            <SidbarItemsList />
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>

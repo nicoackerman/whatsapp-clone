@@ -4,6 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  --color-primary-black: oklch(0.131 0.004 149.1);
+  --color-secondary-black: oklch(0.145 0.004 172.4);
   --color-soft-gray: oklch(0 0 0 / 60%);
   --color-soft-white: oklch(1 0 0 / 0.6);
   --color-ghost-gray: oklch(0.6274 0.0554 257.62 / 0.2);
