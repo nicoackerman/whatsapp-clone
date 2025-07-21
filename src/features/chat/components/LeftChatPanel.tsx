@@ -4,6 +4,17 @@ import { PreviewChatBox } from "./PreviewChatBox";
 import { MoreVertical } from "lucide-react";
 import { threads } from "./dummy-data";
 import { BubbleIcon } from "~/components/ui/bubble-icon";
+
+function PreviewChatBoxList() {
+  return (
+    <div className="flex grow flex-col space-y-3">
+      {threads.map((thread) => (
+        <PreviewChatBox key={thread._id} thread={thread} />
+      ))}
+    </div>
+  );
+}
+
 export function LeftChatPanel() {
   return (
     <div className="flex h-full grow flex-col justify-start space-y-7">
@@ -14,11 +25,7 @@ export function LeftChatPanel() {
         <BubbleIcon Icon={MoreVertical} variant={"gray"} />
       </div>
       <ScrollArea className="h-[700px] w-full whitespace-nowrap">
-        <div className="flex grow flex-col space-y-3">
-          {threads.map((thread) => (
-            <PreviewChatBox key={thread._id} thread={thread} />
-          ))}
-        </div>
+        <PreviewChatBoxList />
       </ScrollArea>
     </div>
   );

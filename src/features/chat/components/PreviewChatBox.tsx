@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import { useChatStore } from "../hooks/useChatStore";
+import { useChatStore, type ThreadId } from "../hooks/useChatStore";
 import clsx from "clsx";
 import type { Thread } from "./dummy-data";
 
@@ -9,15 +9,21 @@ interface PreviewChatBoxProps {
   thread: Thread;
 }
 
-export function PreviewChatBox(props: PreviewChatBoxProps) {
-  const setThreadId = useChatStore((state) => state.setThreadId);
-  const currentThreadId = useChatStore((state) => state.currentThreadId);
+interface ChatPreviewDisplay {
+  onView: boolean;
+  thread: any;
+  setAsCurrentThread: (newThreadId: ThreadId) => void;
+}
 
-  const thread = props.thread;
-  const threadId = thread._id;
+/* 
+  Shows a preview box for a given chat
+  * Gets the current thread based on state
+  * Handles new thread by set thread state
+  * Handles UI and dinamic styles based on state
+*/
 
-  const isCurrentChat = currentThreadId == threadId;
-  const activeClass = isCurrentChat ? "bg-ghost-gray" : "bg-transparent";
+function ChatPreviewDisplay(props: ChatPreviewDisplay) {
+  const activeClass = props.onView ? "bg-ghost-gray" : "bg-transparent";
   const baseClass =
     "cursor-pointer flex items-center justify-between gap-3 bg-transparent p-4 hover:bg-ghost-gray dark:text-white h-15";
 
@@ -25,19 +31,35 @@ export function PreviewChatBox(props: PreviewChatBoxProps) {
     <Button
       className={clsx(baseClass, activeClass)}
       onClick={() => {
-        setThreadId(threadId);
+        props.setAsCurrentThread(props.thread._id);
       }}
     >
       <Avatar className="size-10">
-        <AvatarImage src={thread.threadImage} />
+        <AvatarImage src={props.thread.threadImage} />
         <AvatarFallback>User</AvatarFallback>
       </Avatar>
       <div className="flex grow flex-col items-start">
-        <h3 className="text-base dark:text-white">{thread.threadName}</h3>
+        <h3 className="text-base dark:text-white">{props.thread.threadName}</h3>
         <span className="text-soft-gray dark:text-soft-white line-clamp-1">
-          {thread.lastMessage.content}
+          {props.thread.lastMessage.content}
         </span>
       </div>
     </Button>
+  );
+}
+
+export function PreviewChatBox(props: PreviewChatBoxProps) {
+  const setThreadId = useChatStore((state) => state.setThreadId);
+  const currentThreadId = useChatStore((state) => state.currentThreadId);
+
+  const thread = props.thread;
+  const isCurrentChat = currentThreadId == thread._id;
+
+  return (
+    <ChatPreviewDisplay
+      onView={isCurrentChat}
+      thread={thread}
+      setAsCurrentThread={setThreadId}
+    />
   );
 }

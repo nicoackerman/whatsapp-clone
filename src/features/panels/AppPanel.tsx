@@ -1,16 +1,29 @@
 "use client";
+
 import React from "react";
+
 import { useSidebar } from "~/components/ui/sidebar";
 import { APP_PANELS } from "./config";
-import { useUser } from "@clerk/nextjs";
+import { RequireAuth } from "~/components/logic/RequireAuth";
+
+/* 
+  Handles the bipanel pattern for the app
+  * Gets the current bipanel components
+  * Handles unauthenticated users
+  * Renders UI for bipanel
+*/
 
 function AppPanel() {
+  return (
+    <RequireAuth>
+      <BipanelDisplay />
+    </RequireAuth>
+  );
+}
+
+function BipanelDisplay() {
   const { currentPanelId } = useSidebar();
-  const { isLoaded, isSignedIn } = useUser();
 
-  if (isLoaded && !isSignedIn) throw Error("Unauthenticated User");
-
-  // Gets current panel based on the sidebar last section opened
   const currentPanel = React.useMemo(() => {
     return APP_PANELS[currentPanelId];
   }, [currentPanelId]);
