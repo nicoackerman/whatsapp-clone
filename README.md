@@ -2,6 +2,9 @@
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
+# Database schema
+<img width="1046" height="851" alt="Untitled" src="https://github.com/user-attachments/assets/7ee4d8ff-6aaa-4da7-8a8c-3caf5ad1b9b0" />
+
 ## What's next? How do I make an app with this?
 
 We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
