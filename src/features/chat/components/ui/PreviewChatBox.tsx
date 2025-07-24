@@ -1,9 +1,9 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import { useChatStore, type ThreadId } from "../hooks/useChatStore";
+import { useChatStore, type ThreadId } from "../../hooks/useChatStore";
 import clsx from "clsx";
-import type { Thread } from "./dummy-data";
+import type { Thread } from "../../types";
 
 interface PreviewChatBoxProps {
   thread: Thread;
@@ -52,7 +52,7 @@ export function PreviewChatBox(props: PreviewChatBoxProps) {
   const setThreadId = useChatStore((state) => state.setThreadId);
   const currentThreadId = useChatStore((state) => state.currentThreadId);
 
-  const thread = props.thread;
+  const thread = {};
   const isCurrentChat = currentThreadId == thread._id;
 
   return (

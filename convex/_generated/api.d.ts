@@ -13,8 +13,13 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as channels from "../channels.js";
 import type * as clerkWebhook from "../clerkWebhook.js";
 import type * as http from "../http.js";
+import type * as messages from "../messages.js";
+import type * as servers from "../servers.js";
+import type * as threads from "../threads.js";
+import type * as userChannels from "../userChannels.js";
 import type * as users from "../users.js";
 
 /**
@@ -26,8 +31,13 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  channels: typeof channels;
   clerkWebhook: typeof clerkWebhook;
   http: typeof http;
+  messages: typeof messages;
+  servers: typeof servers;
+  threads: typeof threads;
+  userChannels: typeof userChannels;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

@@ -2,28 +2,32 @@ import { ConvexError, v } from "convex/values";
 import {
   internalMutation,
   mutation,
+  MutationCtx,
   query,
   QueryCtx,
 } from "./_generated/server";
+import { internal } from "./_generated/api";
+import { Id } from "./_generated/dataModel";
 
-export const createUser = internalMutation({
+/* CRUD */
+export const create = internalMutation({
   args: {
-    profileImg: v.string(),
-    fullName: v.string(),
     tokenIdentifier: v.string(),
+    profileImg: v.string(),
+    firstName: v.string(),
+    lastName: v.string(),
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("users", {
       tokenIdentifier: args.tokenIdentifier,
-      fullName: args.fullName,
+      firstName: args.firstName,
+      lastName: args.lastName,
       profileImg: args.profileImg,
-      contacts: [],
-      isOnline: true,
     });
   },
 });
 
-export const updateUser = internalMutation({
+export const update = internalMutation({
   args: { tokenIdentifier: v.string(), profileImg: v.string() },
   async handler(ctx, args) {
     const { user } = await getAuthenticathedUser(ctx);
@@ -34,7 +38,7 @@ export const updateUser = internalMutation({
   },
 });
 
-export const deleteUser = internalMutation({
+export const eliminate = internalMutation({
   args: { tokenIdentifier: v.string() },
   async handler(ctx, args) {
     const { user } = await getAuthenticathedUser(ctx);
@@ -42,27 +46,9 @@ export const deleteUser = internalMutation({
     await ctx.db.delete(user._id);
   },
 });
+ 
 
-export const setUserOnline = internalMutation({
-  args: { tokenIdentifier: v.string() },
-  handler: async (ctx, args) => {
-    const { user } = await getAuthenticathedUser(ctx);
-
-    // updated the online status
-    await ctx.db.patch(user._id, { isOnline: true });
-  },
-});
-
-export const setUserOffline = internalMutation({
-  args: { tokenIdentifier: v.string() },
-  handler: async (ctx, args) => {
-    const { user } = await getAuthenticathedUser(ctx);
-
-    /* updated the online status */
-    await ctx.db.patch(user._id, { isOnline: false });
-  },
-});
-
+/* functionalities */
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
@@ -85,39 +71,7 @@ export const getMe = query({
   },
 });
 
-export const addContact = mutation({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    const { user } = await getAuthenticathedUser(ctx);
 
-    const isAlreadyContact = user.contacts.includes(args.userId);
-    if (isAlreadyContact) return;
-
-    await ctx.db.patch(user._id, {
-      contacts: [...user.contacts, args.userId],
-    });
-  },
-});
-
-export const deleteContact = mutation({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    const { user } = await getAuthenticathedUser(ctx);
-
-    const newContacts = user.contacts.filter((id) => id != args.userId);
-    await ctx.db.patch(user._id, {
-      contacts: newContacts,
-    });
-  },
-});
-
-export const getMyContacts = query({
-  args: {},
-  async handler(ctx, args) {
-    const { user } = await getAuthenticathedUser(ctx);
-    return user.contacts;
-  },
-});
 
 const getAuthenticathedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();

@@ -33,20 +33,21 @@ http.route({
       */
       switch (result.type) {
         case "user.created":
-          await ctx.runMutation(internal.users.createUser, {
+          await ctx.runMutation(internal.users.create, {
             tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${result.data.id}`,
-            fullName: `${result.data.first_name} ${result.data.last_name}`,
+            firstName: result.data.first_name,
+            lastName: result.data.last_name,
             profileImg: result.data.image_url,
           });
           break;
         case "user.updated":
-          await ctx.runMutation(internal.users.updateUser, {
+          await ctx.runMutation(internal.users.update, {
             tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${result.data.id}`,
             profileImg: result.data.image_url,
           });
           break;
         case "user.deleted":
-          await ctx.runMutation(internal.users.deleteUser, {
+          await ctx.runMutation(internal.users.eliminate, {
             tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${result.data.id}`,
           });
           break;

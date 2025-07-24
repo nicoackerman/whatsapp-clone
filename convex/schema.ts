@@ -2,22 +2,39 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  thread: defineTable({
-    participants: v.array(v.id("users")),
-    messages: v.array(v.id("messages")),
-    lastMessage: v.id("messages"),
-  }).index("by_participants", ["participants"]),
-  messages: defineTable({
-    type: v.union(v.literal("text")),
-    content: v.string(),
-    sender: v.id("users"),
-    threadIdentifier: v.id("thread"),
-  }).index("by_threadIdentifier", ["threadIdentifier"]),
   users: defineTable({
-    profileImg: v.string(),
-    fullName: v.string(),
-    contacts: v.array(v.id("users")),
     tokenIdentifier: v.string(),
-    isOnline: v.boolean(),
+    profileImg: v.string(),
+    firstName: v.string(),
+    lastName: v.string(),
   }).index("by_tokenIdentifier", ["tokenIdentifier"]),
+
+  channels: defineTable({
+    type: v.union(v.literal("thread"), v.literal("server")),
+  }).index("by_type", ["type"]),
+
+  servers: defineTable({
+    channelIdentifier: v.id("channels"),
+    name: v.string(),
+    imageUrl: v.string(),
+  })
+    .index("by_channelIdentifier", ["channelIdentifier"])
+    .index("by_name", ["name"]),
+
+  threads: defineTable({
+    channelIdentifier: v.id("channels"),
+  }).index("by_channelIdentifier", ["channelIdentifier"]),
+
+  messages: defineTable({
+    content: v.string(),
+    senderIdentifier: v.id("users"),
+    channelIdentifier: v.id("channels"),
+  })
+    .index("by_senderIdentifier", ["senderIdentifier"])
+    .index("by_channelIdentifier", ["channelIdentifier"]),
+
+  userChannels: defineTable({
+    userIdentifier: v.id("users"),
+    channelIdentifier: v.id("channels"),
+  }).index("by_userIdentifier", ["userIdentifier"]),
 });

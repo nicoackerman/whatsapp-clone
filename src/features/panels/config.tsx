@@ -1,6 +1,6 @@
 import React, { lazy, type JSX } from "react";
-import { RightChatPanel } from "../chat/components/RightChatPanel";
-import { LeftChatPanel } from "../chat/components/LeftChatPanel";
+import { RightChatPanel } from "../chat/components/panels/RightChatPanel";
+import { LeftChatPanel } from "../chat/components/panels/LeftChatPanel";
 
 // Lazy load for secondary panels
 const LeftExplorePanel = lazy(
