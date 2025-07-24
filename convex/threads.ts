@@ -1,4 +1,4 @@
-import { ConvexError } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query, QueryCtx } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
@@ -24,12 +24,13 @@ const getAuthenticathedUser = async (ctx: QueryCtx) => {
 };
 
 export const create = mutation({
-  args: {},
-  async handler(ctx) {
+  args: { receiverIdentifier: v.id("users") },
+  async handler(ctx, args) {
     await getAuthenticathedUser(ctx);
 
     const channelIdentifier = (await ctx.runMutation(internal.channels.create, {
       type: "thread",
+      receiversIdentifier: [args.receiverIdentifier],
     })) as Id<"channels">;
     const threadIdentifier = await ctx.db.insert("threads", {
       channelIdentifier: channelIdentifier,

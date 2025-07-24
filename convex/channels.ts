@@ -6,16 +6,18 @@ import { Doc } from "./_generated/dataModel";
 export const create = internalMutation({
   args: {
     type: v.union(v.literal("thread"), v.literal("server")),
+    receiversIdentifier: v.array(v.id("users")),
   },
   async handler(ctx, args) {
     await getAuthenticathedUser(ctx);
     const channelIdentifier = await ctx.db.insert("channels", {
       type: args.type,
     });
-    const relationIdentifier = await ctx.runMutation(
+    const relationIdentifiers = await ctx.runMutation(
       internal.userChannels.create,
       {
         channelIdentifier: channelIdentifier,
+        receiversIdentifier: args.receiversIdentifier,
       },
     );
     return channelIdentifier;

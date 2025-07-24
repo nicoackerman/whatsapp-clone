@@ -49,12 +49,17 @@ export const get = query({
 });
 
 export const create = mutation({
-  args: { name: v.string(), imageUrl: v.string() },
+  args: {
+    name: v.string(),
+    imageUrl: v.string(),
+    receiverIdentifiers: v.array(v.id("users")),
+  },
   async handler(ctx, args) {
     await getAuthenticathedUser(ctx);
 
     const channelIdentifier = (await ctx.runMutation(internal.channels.create, {
       type: "server",
+      receiversIdentifier: args.receiverIdentifiers,
     })) as Id<"channels">;
     const serverIdentifier = await ctx.db.insert("servers", {
       channelIdentifier: channelIdentifier,
