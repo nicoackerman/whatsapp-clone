@@ -1,20 +1,16 @@
 import { create } from "zustand";
-import { threads, type Thread } from "../components/dummy-data";
+import type { Channel } from "../types";
 
-type ThreadId = string;
 interface ChatStoreSchema {
-  currentThreadId: ThreadId;
-  currentThreadMeta: Thread | null;
-  setThreadId: (newThreadId: ThreadId) => void;
+  currentChannelIdentifier: Channel["_id"] | "placeholder";
+  setThreadId: (channelIdentifier: Channel["_id"]) => void;
 }
 
 const useChatStore = create<ChatStoreSchema>((set) => ({
-  currentThreadId: "placeholder",
-  currentThreadMeta: null,
-  setThreadId(newThreadId) {
-    const newThreadMeta = threads.find((t: Thread) => t._id == newThreadId)!;
-    set({ currentThreadId: newThreadId, currentThreadMeta: newThreadMeta });
+  currentChannelIdentifier: "placeholder",
+  setThreadId(newChannelIdentifier) {
+    set({ currentChannelIdentifier: newChannelIdentifier });
   },
 }));
 
-export { type ThreadId, useChatStore };
+export { useChatStore };

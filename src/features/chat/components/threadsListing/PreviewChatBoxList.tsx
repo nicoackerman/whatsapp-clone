@@ -1,13 +1,13 @@
 "use client";
 import { useQuery } from "convex/react";
-import NoThreadsAvailable from "../ui/NoThreadsAvailable";
-import { PreviewChatBox } from "../ui/PreviewChatBox";
+import NoThreadsAvailable from "./NoThreadsAvailable";
+import { PreviewChatBox } from "./PreviewChatBox";
 import { api } from "convex/_generated/api";
 
 export default function PreviewChatBoxList() {
-  const threads = useQuery(api.threads.getAll);
+  const threadSummaries = useQuery(api.threads.getSummary);
 
-  if (!threads) {
+  if (!threadSummaries) {
     return (
       <div className="flex grow flex-col space-y-3">
         <NoThreadsAvailable />
@@ -15,7 +15,7 @@ export default function PreviewChatBoxList() {
     );
   }
 
-  if (threads.length == 0) {
+  if (threadSummaries.length == 0) {
     return (
       <div className="flex grow flex-col space-y-3">
         <NoThreadsAvailable />
@@ -25,8 +25,8 @@ export default function PreviewChatBoxList() {
 
   return (
     <div className="flex grow flex-col space-y-3">
-      {threads.map((thread) => (
-        <PreviewChatBox key={thread._id} thread={thread} />
+      {threadSummaries.map((summary) => (
+        <PreviewChatBox key={summary.channelIdentifier} summary={summary} />
       ))}
     </div>
   );

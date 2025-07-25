@@ -3,7 +3,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { MoreVertical } from "lucide-react";
 import { BubbleIcon } from "~/components/ui/bubble-icon";
 import Link from "next/link";
-import PreviewChatBoxList from "../functional/PreviewChatBoxList";
+import PreviewChatBoxList from "../threadsListing/PreviewChatBoxList";
 
 export function LeftChatPanel() {
   return (

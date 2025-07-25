@@ -1,3 +1,5 @@
 import type { Doc } from "convex/_generated/dataModel";
+import type { Preview } from "convex/threads";
 
-export type Thread = Doc<"threads">;
+export type ThreadSummary = Preview;
+export type Channel = Doc<"channels">;
