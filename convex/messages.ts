@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query, QueryCtx } from "./_generated/server";
+import { internalQuery, mutation, query, QueryCtx } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 
 const getAuthenticathedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();
@@ -21,6 +22,20 @@ const getAuthenticathedUser = async (ctx: QueryCtx) => {
   return { user, identity };
 };
 
+const getLastMessageOfChannel = async (
+  ctx: QueryCtx,
+  channelIdentifier: Id<"channels">,
+) => {
+  const lastMessage = await ctx.db
+    .query("messages")
+    .withIndex("by_channelIdentifier", (q) =>
+      q.eq("channelIdentifier", channelIdentifier),
+    )
+    .order("desc")
+    .take(1);
+  return lastMessage[0];
+};
+
 export const create = mutation({
   args: {
     content: v.string(),
@@ -37,7 +52,7 @@ export const create = mutation({
   },
 });
 
-export const get = query({
+export const getByChannel = query({
   args: { channelIdentifier: v.id("channels") },
   async handler(ctx, args) {
     const channelMessages = await ctx.db
@@ -47,5 +62,18 @@ export const get = query({
       )
       .collect();
     return channelMessages;
+  },
+});
+
+export const getLastMessage = internalQuery({
+  args: { channelIdentifier: v.id("channels") },
+  async handler(ctx, args) {
+    await getAuthenticathedUser(ctx);
+
+    const lastMessage = await getLastMessageOfChannel(
+      ctx,
+      args.channelIdentifier,
+    );
+    return lastMessage;
   },
 });

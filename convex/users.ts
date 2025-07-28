@@ -1,13 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import {
-  internalMutation,
-  mutation,
-  MutationCtx,
-  query,
-  QueryCtx,
-} from "./_generated/server";
-import { internal } from "./_generated/api";
-import { Id } from "./_generated/dataModel";
+import { internalMutation, query, QueryCtx } from "./_generated/server";
 
 /* CRUD */
 export const create = internalMutation({
@@ -46,10 +38,9 @@ export const eliminate = internalMutation({
     await ctx.db.delete(user._id);
   },
 });
- 
 
 /* functionalities */
-export const getAll = query({
+export const getMessagable = query({
   args: {},
   handler: async (ctx) => {
     const { identity } = await getAuthenticathedUser(ctx);
@@ -71,8 +62,7 @@ export const getMe = query({
   },
 });
 
-
-
+/* helpers */
 const getAuthenticathedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {

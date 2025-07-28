@@ -1,8 +1,13 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query, QueryCtx } from "./_generated/server";
+import { internalQuery, mutation, query, QueryCtx } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 
+export interface Preview {
+  channelIdentifier: Id<"channels">;
+  user: Doc<"users">;
+  lastMessage: Doc<"messages">;
+}
 const getAuthenticathedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
@@ -15,12 +20,34 @@ const getAuthenticathedUser = async (ctx: QueryCtx) => {
       q.eq("tokenIdentifier", identity.tokenIdentifier),
     )
     .unique();
-
+  console.log(identity, user);
   if (!user) {
     throw new ConvexError("User not found");
   }
 
   return { user, identity };
+};
+const getThreadsSummary = async (ctx: QueryCtx, threads: Doc<"threads">[]) => {
+  // Iterates over all user's threads
+  const previews: Preview[] = await Promise.all(
+    threads.map(async (thread) => {
+      // fetch preview data for each thread: reciver, lastMessage, etc
+      const receiver = await ctx.runQuery(
+        internal.userChannels.getUsersOfChannel,
+        { channelIdentifier: thread.channelIdentifier },
+      );
+      const lastMessage = await ctx.runQuery(internal.messages.getLastMessage, {
+        channelIdentifier: thread.channelIdentifier,
+      });
+
+      return {
+        channelIdentifier: thread.channelIdentifier,
+        user: receiver[0],
+        lastMessage: lastMessage,
+      };
+    }),
+  );
+  return previews;
 };
 
 export const create = mutation({
@@ -30,7 +57,7 @@ export const create = mutation({
 
     const channelIdentifier = (await ctx.runMutation(internal.channels.create, {
       type: "thread",
-      receiversIdentifier: [args.receiverIdentifier],
+      recieversIdentifier: [args.receiverIdentifier],
     })) as Id<"channels">;
     const threadIdentifier = await ctx.db.insert("threads", {
       channelIdentifier: channelIdentifier,
@@ -39,7 +66,7 @@ export const create = mutation({
   },
 });
 
-export const get = query({
+export const get = internalQuery({
   async handler(ctx) {
     await getAuthenticathedUser(ctx);
 
@@ -50,7 +77,7 @@ export const get = query({
       (channel) => channel.type == "thread",
     );
 
-    const threads: Doc<"threads">[] = await Promise.all(
+    const threads = await Promise.all(
       threadChannels.map(async (threadChannel) => {
         const thread = await ctx.db
           .query("threads")
@@ -61,5 +88,15 @@ export const get = query({
       }),
     );
     return threads;
+  },
+});
+
+export const getSummary = query({
+  async handler(ctx) {
+    await getAuthenticathedUser(ctx);
+
+    const threads = await ctx.runQuery(internal.threads.get);
+    const summary = await getThreadsSummary(ctx, threads);
+    return summary;
   },
 });

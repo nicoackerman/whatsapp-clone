@@ -36,5 +36,7 @@ export default defineSchema({
   userChannels: defineTable({
     userIdentifier: v.id("users"),
     channelIdentifier: v.id("channels"),
-  }).index("by_userIdentifier", ["userIdentifier"]),
+  })
+    .index("by_userIdentifier", ["userIdentifier"])
+    .index("by_channelIdentifier", ["channelIdentifier"]),
 });

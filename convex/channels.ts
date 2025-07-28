@@ -6,7 +6,7 @@ import { Doc } from "./_generated/dataModel";
 export const create = internalMutation({
   args: {
     type: v.union(v.literal("thread"), v.literal("server")),
-    receiversIdentifier: v.array(v.id("users")),
+    recieversIdentifier: v.array(v.id("users")),
   },
   async handler(ctx, args) {
     await getAuthenticathedUser(ctx);
@@ -17,7 +17,7 @@ export const create = internalMutation({
       internal.userChannels.create,
       {
         channelIdentifier: channelIdentifier,
-        receiversIdentifier: args.receiversIdentifier,
+        recieversIdentifier: args.recieversIdentifier,
       },
     );
     return channelIdentifier;
@@ -25,6 +25,25 @@ export const create = internalMutation({
 });
 
 export const get = internalQuery({
+  async handler(ctx) {
+    await getAuthenticathedUser(ctx);
+
+    const channelRefs: Doc<"userChannels">[] = await ctx.runQuery(
+      internal.userChannels.get,
+    );
+    const channels: Doc<"channels">[] = await Promise.all(
+      channelRefs.map(async (channelRef) => {
+        const channel = await ctx.db.get(channelRef.channelIdentifier);
+        if (!channel) throw new ConvexError("Bad reference at userChannels");
+        return channel;
+      }),
+    );
+
+    return channels;
+  },
+});
+
+export const getReceivers = internalQuery({
   async handler(ctx) {
     await getAuthenticathedUser(ctx);
 
