@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e4339c30-64ba-4642-bae9-576d0cf12e64/deploy-status)](https://app.netlify.com/projects/incomparable-entremet-4adec4/deploys)
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
