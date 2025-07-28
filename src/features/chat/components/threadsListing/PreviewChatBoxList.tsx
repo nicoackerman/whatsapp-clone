@@ -2,7 +2,7 @@
 import { useQuery } from "convex/react";
 import NoThreadsAvailable from "./NoThreadsAvailable";
 import { PreviewChatBox } from "./PreviewChatBox";
-import { api } from "convex/_generated/api";
+import { api } from "~/../convex/_generated/api";
 
 export default function PreviewChatBoxList() {
   const threadSummaries = useQuery(api.threads.getSummary);
