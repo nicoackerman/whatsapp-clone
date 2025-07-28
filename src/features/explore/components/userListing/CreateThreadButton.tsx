@@ -1,5 +1,5 @@
 "use client";
-import { api } from "convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
 import { Button } from "~/components/ui/button";
 import type { User } from "../../types";
