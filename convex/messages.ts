@@ -1,7 +1,11 @@
 import { ConvexError, v } from "convex/values";
-import { internalQuery, mutation, query, QueryCtx } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
-
+import {
+  internalQuery,
+  mutation,
+  query,
+  type QueryCtx,
+} from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
 const getAuthenticathedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {

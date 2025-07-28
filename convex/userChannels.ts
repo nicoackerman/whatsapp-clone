@@ -2,11 +2,10 @@ import { ConvexError, v } from "convex/values";
 import {
   internalMutation,
   internalQuery,
-  MutationCtx,
-  QueryCtx,
+  type MutationCtx,
+  type QueryCtx,
 } from "./_generated/server";
-import { Doc, Id } from "./_generated/dataModel";
-
+import type { Doc, Id } from "./_generated/dataModel";
 const getAuthenticathedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {

@@ -19,7 +19,7 @@ export default function ThreadSummaryCard({
   const baseClass =
     "cursor-pointer flex items-center justify-between gap-3 bg-transparent p-4 hover:bg-ghost-gray dark:text-white h-15";
   const { profileImg, firstName } = summary.user;
-  const { content } = summary.lastMessage;
+  const content = summary.lastMessage ? summary.lastMessage.content : "";
 
   return (
     <Button

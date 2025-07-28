@@ -1,12 +1,17 @@
 import { ConvexError, v } from "convex/values";
-import { internalQuery, mutation, query, QueryCtx } from "./_generated/server";
-import { Doc, Id } from "./_generated/dataModel";
+import {
+  internalQuery,
+  mutation,
+  query,
+  type QueryCtx,
+} from "./_generated/server";
+import type { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 
 export interface Preview {
   channelIdentifier: Id<"channels">;
   user: Doc<"users">;
-  lastMessage: Doc<"messages">;
+  lastMessage: Doc<"messages"> | null;
 }
 const getAuthenticathedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();
@@ -27,22 +32,30 @@ const getAuthenticathedUser = async (ctx: QueryCtx) => {
 
   return { user, identity };
 };
+
+const getReciver = async (ctx: QueryCtx, thread: Doc<"threads">) => {
+  const recivers = await ctx.runQuery(internal.userChannels.getUsersOfChannel, {
+    channelIdentifier: thread.channelIdentifier,
+  });
+  if (!recivers || !recivers[0]) throw new ConvexError("Recivers not found");
+  return recivers[0] as Doc<"users">;
+};
+
+const getLastMessage = async (ctx: QueryCtx, thread: Doc<"threads">) => {
+  const lastMessage = await ctx.runQuery(internal.messages.getLastMessage, {
+    channelIdentifier: thread.channelIdentifier,
+  });
+
+  return lastMessage;
+};
 const getThreadsSummary = async (ctx: QueryCtx, threads: Doc<"threads">[]) => {
-  // Iterates over all user's threads
   const previews: Preview[] = await Promise.all(
     threads.map(async (thread) => {
-      // fetch preview data for each thread: reciver, lastMessage, etc
-      const receiver = await ctx.runQuery(
-        internal.userChannels.getUsersOfChannel,
-        { channelIdentifier: thread.channelIdentifier },
-      );
-      const lastMessage = await ctx.runQuery(internal.messages.getLastMessage, {
-        channelIdentifier: thread.channelIdentifier,
-      });
-
+      const receiver = await getReciver(ctx, thread);
+      const lastMessage = await getLastMessage(ctx, thread);
       return {
         channelIdentifier: thread.channelIdentifier,
-        user: receiver[0],
+        user: receiver,
         lastMessage: lastMessage,
       };
     }),

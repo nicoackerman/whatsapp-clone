@@ -1,8 +1,11 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, internalQuery, QueryCtx } from "./_generated/server";
+import {
+  internalMutation,
+  internalQuery,
+  type QueryCtx,
+} from "./_generated/server";
 import { internal } from "./_generated/api";
-import { Doc } from "./_generated/dataModel";
-
+import type { Doc } from "./_generated/dataModel";
 export const create = internalMutation({
   args: {
     type: v.union(v.literal("thread"), v.literal("server")),

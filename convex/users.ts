@@ -1,6 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, query, QueryCtx } from "./_generated/server";
-
+import { internalMutation, query, type QueryCtx } from "./_generated/server";
 /* CRUD */
 export const create = internalMutation({
   args: {

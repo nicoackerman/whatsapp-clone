@@ -1,3 +1,4 @@
+// Should this be server?
 import React from "react";
 import { useChatStore } from "../../hooks/useChatStore";
 import type { ThreadSummary } from "../../types";
