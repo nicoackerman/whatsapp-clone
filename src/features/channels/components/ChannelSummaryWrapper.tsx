@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useChatStore } from "../../messages/hooks/useChatStore";
-import type { ThreadSummary } from "../types";
+import type { Channel, ThreadSummary } from "../types";
 import ChannelSummaryUI from "./ChannelSummaryUI";
 
 interface ChannelSummaryWrapperProps {
@@ -12,7 +12,7 @@ export default function ChannelSummaryWrapper({
   summary,
 }: ChannelSummaryWrapperProps) {
   const setThreadId = useChatStore((state) => state.setThreadId);
-  const currentChannelIdentifier = useChatStore(
+  const currentChannelIdentifier: Channel["_id"] | "placeholder" = useChatStore(
     (state) => state.currentChannelIdentifier,
   );
 
