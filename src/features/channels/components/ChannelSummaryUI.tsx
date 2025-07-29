@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "~/components/ui/button";
 import clsx from "clsx";
-import type { Channel } from "../../chat/types";
+import type { Channel } from "../types";
 import { UserAvatar } from "~/components/ui/user-avatar";
 
 interface ChannelSummaryProps {

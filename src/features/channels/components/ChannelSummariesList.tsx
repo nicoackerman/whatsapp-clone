@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "convex/react";
-import NoThreadsAvailable from "../../chat/components/threadsListing/NoThreadsAvailable";
+import NoChannelsAvailable from "./NoChannelsAvailable";
 import ChannelSummaryWrapper from "./ChannelSummaryWrapper";
 import { api } from "@/convex/_generated/api";
 
@@ -11,7 +11,7 @@ export default function ChannelSummariesList() {
   if (!threadSummaries) {
     return (
       <div className="flex grow flex-col space-y-3">
-        <NoThreadsAvailable />
+        <NoChannelsAvailable />
       </div>
     );
   }
@@ -19,7 +19,7 @@ export default function ChannelSummariesList() {
   if (threadSummaries.length == 0) {
     return (
       <div className="flex grow flex-col space-y-3">
-        <NoThreadsAvailable />
+        <NoChannelsAvailable />
       </div>
     );
   }

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { useChatStore } from "../../chat/hooks/useChatStore";
-import type { ThreadSummary } from "../../chat/types";
+import { useChatStore } from "../../messages/hooks/useChatStore";
+import type { ThreadSummary } from "../types";
 import ChannelSummaryUI from "./ChannelSummaryUI";
 
 interface ChannelSummaryWrapperProps {

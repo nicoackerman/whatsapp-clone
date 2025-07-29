@@ -2,7 +2,7 @@ import React from "react";
 import { Lock } from "lucide-react";
 import Image from "next/image";
 
-export function ChatPanelPlaceHolder() {
+export default function MessagesPanelPlaceHolder() {
   return (
     <div className="flex size-full flex-col items-center justify-center px-8 py-10">
       <div className="flex grow flex-col items-center justify-center gap-4">
