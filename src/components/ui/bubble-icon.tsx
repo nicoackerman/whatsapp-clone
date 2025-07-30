@@ -25,6 +25,8 @@ export function BubbleIcon({
 }: React.ComponentProps<"div"> &
   VariantProps<typeof bubbleVariants> & { Icon: LucideIcon }) {
   return (
-    <div className={cn(bubbleVariants({ variant }), className)}><Icon className="size-5"/></div>
+    <div className={cn(bubbleVariants({ variant }), className)}>
+      <Icon className="size-5" />
+    </div>
   );
 }

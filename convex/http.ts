@@ -35,8 +35,8 @@ http.route({
         case "user.created":
           await ctx.runMutation(internal.users.create, {
             tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${result.data.id}`,
-            firstName: result.data.first_name,
-            lastName: result.data.last_name,
+            firstName: result.data.first_name ?? "user",
+            lastName: result.data.last_name ?? "unknow",
             profileImg: result.data.image_url,
           });
           break;
