@@ -2,6 +2,7 @@ import { ConvexError, v } from "convex/values";
 import {
   internalMutation,
   internalQuery,
+  query,
   type QueryCtx,
 } from "./_generated/server";
 import { internal } from "./_generated/api";
@@ -31,9 +32,11 @@ export const get = internalQuery({
   async handler(ctx) {
     await getAuthenticathedUser(ctx);
 
+    // gets all current user's references (userChannels object)
     const channelRefs: Doc<"userChannels">[] = await ctx.runQuery(
       internal.userChannels.get,
     );
+    // gets all current users' channels (channels object)
     const channels: Doc<"channels">[] = await Promise.all(
       channelRefs.map(async (channelRef) => {
         const channel = await ctx.db.get(channelRef.channelIdentifier);
@@ -46,22 +49,17 @@ export const get = internalQuery({
   },
 });
 
-export const getReceivers = internalQuery({
-  async handler(ctx) {
+export const getRecivers = query({
+  args: { channelIdentifier: v.id("channels") },
+  async handler(ctx, args) {
     await getAuthenticathedUser(ctx);
 
-    const channelRefs: Doc<"userChannels">[] = await ctx.runQuery(
-      internal.userChannels.get,
-    );
-    const channels: Doc<"channels">[] = await Promise.all(
-      channelRefs.map(async (channelRef) => {
-        const channel = await ctx.db.get(channelRef.channelIdentifier);
-        if (!channel) throw new ConvexError("Bad reference at userChannels");
-        return channel;
-      }),
+    const users: Doc<"users">[] = await ctx.runQuery(
+      internal.userChannels.getUsersByChannel,
+      { channelIdentifier: args.channelIdentifier },
     );
 
-    return channels;
+    return users;
   },
 });
 

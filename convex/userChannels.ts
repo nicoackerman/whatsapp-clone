@@ -72,7 +72,7 @@ export const get = internalQuery({
   },
 });
 
-export const getUsersOfChannel = internalQuery({
+export const getRecieversByChannel = internalQuery({
   args: {
     channelIdentifier: v.id("channels"),
   },
@@ -86,7 +86,7 @@ export const getUsersOfChannel = internalQuery({
         q.eq("channelIdentifier", args.channelIdentifier),
       )
       .collect();
-    // Gets the channel and user relations that do not contain the current users (recievers)
+    // Gets the channel and user relations that do not contain the current user (recievers)
     let channels = relationsFromChannel.filter(
       (relation: Doc<"userChannels">) => relation.userIdentifier != user._id,
     );
@@ -101,6 +101,38 @@ export const getUsersOfChannel = internalQuery({
             .collect();
           if (!recevier) throw new ConvexError("Bad reference at userChannels");
           return recevier;
+        }),
+      )
+    ).flat();
+    return recievers;
+  },
+});
+
+export const getUsersByChannel = internalQuery({
+  args: {
+    channelIdentifier: v.id("channels"),
+  },
+  async handler(ctx, args) {
+    const { user } = await getAuthenticathedUser(ctx);
+
+    // Gets the channel and user relations by channel id
+    let relationsOfChannel = await ctx.db
+      .query("userChannels")
+      .withIndex("by_channelIdentifier", (q) =>
+        q.eq("channelIdentifier", args.channelIdentifier),
+      )
+      .collect();
+
+    // Gets the users associated to a channel
+    let recievers = (
+      await Promise.all(
+        relationsOfChannel.map(async (relation) => {
+          const recievier = await ctx.db
+            .query("users")
+            .withIndex("by_id", (q) => q.eq("_id", relation.userIdentifier))
+            .collect();
+          if (!recievier) throw new ConvexError("Bad reference at userChannels");
+          return recievier;
         }),
       )
     ).flat();

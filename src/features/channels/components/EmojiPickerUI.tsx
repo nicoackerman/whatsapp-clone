@@ -6,12 +6,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { Theme } from "emoji-picker-react";
+import { Theme, type PickerProps } from "emoji-picker-react";
 import { Skeleton } from "~/components/ui/skeleton";
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
 
-
-export default function EmojiPickerUI() {
+export default function EmojiPickerUI(props: PickerProps) {
   return (
     <Popover>
       <PopoverTrigger>
@@ -29,12 +28,7 @@ export default function EmojiPickerUI() {
             </div>
           }
         >
-          <EmojiPicker
-            lazyLoadEmojis
-            width={600}
-            height={400}
-            theme={Theme.DARK}
-          />
+          <EmojiPicker {...props} theme={Theme.DARK} />
         </Suspense>
       </PopoverContent>
     </Popover>

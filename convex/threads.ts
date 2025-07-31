@@ -34,9 +34,12 @@ const getAuthenticathedUser = async (ctx: QueryCtx) => {
 };
 
 const getReciver = async (ctx: QueryCtx, thread: Doc<"threads">) => {
-  const recivers = await ctx.runQuery(internal.userChannels.getUsersOfChannel, {
-    channelIdentifier: thread.channelIdentifier,
-  });
+  const recivers = await ctx.runQuery(
+    internal.userChannels.getRecieversByChannel,
+    {
+      channelIdentifier: thread.channelIdentifier,
+    },
+  );
   if (!recivers || !recivers[0]) throw new ConvexError("Recivers not found");
   return recivers[0] as Doc<"users">;
 };
