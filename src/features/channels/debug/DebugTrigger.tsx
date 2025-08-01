@@ -4,6 +4,7 @@ import {
   type MessageDebuggerSchema,
   useMessageDebugger,
 } from "../hooks/useMessageDebugger";
+import DebuggerUI from "./DebuggerUI";
 
 interface DebugTriggerProps {}
 
@@ -19,11 +20,7 @@ export default function DebugTrigger({}: DebugTriggerProps) {
         }}
         Icon={BugPlayIcon}
       />
-      {messageDebugger.open && (
-        <div className="fixed top-0 left-0 z-10 h-dvh">
-          <h1>Debugger</h1>
-        </div>
-      )}
+      {messageDebugger.open && <DebuggerUI />}
     </>
   );
 }
