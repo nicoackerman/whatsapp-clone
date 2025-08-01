@@ -7,9 +7,9 @@ export default function Loading() {
     <div className="bg-primary-black flex h-screen items-center justify-center">
       <div className="flex flex-col items-center space-y-4">
         <Image
-          src="/public/whatsapp.png"
-          width={500}
-          height={500}
+          src="/whatsapp.png"
+          width={100}
+          height={100}
           alt="WhatsApp Logo"
         />
         <h1 className="text-lg font-medium text-black opacity-80 dark:text-white">
