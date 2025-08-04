@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import type { Channel } from "~/features/channels/types";
 
+export type ChannelIdentifier = Channel["_id"] | "placeholder";
+
 interface ChatStoreSchema {
-  currentChannelIdentifier: Channel["_id"] | "placeholder";
+  currentChannelIdentifier: ChannelIdentifier;
   setThreadId: (channelIdentifier: Channel["_id"]) => void;
 }
 

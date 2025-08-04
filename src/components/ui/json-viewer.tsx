@@ -5,7 +5,7 @@ import { ChevronDown, ChevronRight, Copy, Check } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-interface JsonBlockProps {
+export interface JsonBlockProps {
   data: any;
   name?: string;
   level?: number;
