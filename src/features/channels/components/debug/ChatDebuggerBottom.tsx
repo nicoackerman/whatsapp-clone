@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "~/components/ui/button";
-import { SheetFooter, SheetClose } from "~/components/ui/sheet";
+import { SheetFooter } from "~/components/ui/sheet";
 
 export default function ChatDebuggerBottom({
   ...props

@@ -11,10 +11,8 @@ export default function ChannelDebuggerTop({
 }: React.ComponentProps<"div">) {
   return (
     <SheetHeader>
-      <SheetTitle>Edit profile</SheetTitle>
-      <SheetDescription>
-        Make changes to your profile here. Click save when you&apos;re done.
-      </SheetDescription>
+      <SheetTitle>Debug current Chat</SheetTitle>
+      <SheetDescription>Debug this chat comfortably</SheetDescription>
       {children}
     </SheetHeader>
   );

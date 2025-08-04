@@ -1,10 +1,9 @@
 "use client";
 
-import { Sheet } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { Button } from "~/components/ui/button";
-import { SheetTrigger, SheetContent } from "~/components/ui/sheet";
 
-export default function ChannelDebugger({
+export default function ChatDebugger({
   children,
 }: React.ComponentProps<"div">) {
   return (
