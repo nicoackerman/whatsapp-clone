@@ -3,5 +3,5 @@
 export default function ChatDebuggerIndicator({
   ...props
 }: React.ComponentProps<"div">) {
-  return <div className="" {...props} />;
+  return <div className="flex flex-col gap-4" {...props} />;
 }
