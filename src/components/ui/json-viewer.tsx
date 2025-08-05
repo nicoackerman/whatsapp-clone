@@ -136,7 +136,7 @@ const JsonValue = ({
         )}
         <span
           className={cn(
-            "font-mono text-sm",
+            "font-mono text-sm overflow-wrap-break-word word-break-all",
             getValueColor(getValueType(value)),
           )}
         >
@@ -245,7 +245,7 @@ export function JsonBlock({
   maxLevel = 2,
 }: JsonBlockProps) {
   return (
-    <div className="bg-muted/20 rounded-md border p-3 font-mono text-sm">
+    <div className="bg-muted/20 rounded-md border p-3 font-mono text-sm overflow-x-auto">
       <div className="text-muted-foreground mb-2 font-sans text-xs">{name}</div>
       <JsonValue
         value={data}

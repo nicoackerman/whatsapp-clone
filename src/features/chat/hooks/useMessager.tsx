@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import type { Message } from "../types";
+import type { MessageContent, ChannelIdentifier } from "~/types";
 import { useDraftStore } from "./useDraftStore";
 import { useChatStore } from "~/features/messages/hooks/useChatStore";
-import type { Id } from "@/convex/_generated/dataModel";
 import { getChannelDraft } from "../lib";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -17,17 +16,17 @@ export default function useMessager() {
     State used for automatic identification of the current channel on viwew
   */
   const [_messageContent, setMessageContent] =
-    React.useState<Message["content"]>("");
+    React.useState<MessageContent>("");
   const channelIdentifier = useChatStore(
     (state) => state.currentChannelIdentifier,
-  ) as Id<"channels">;
+  ) as ChannelIdentifier;
   const createMessage = useMutation(api.messages.create);
 
   /* 
     Draft methods for storaging stateless message content as drafts
   */
   const draft = getChannelDraft(channelIdentifier);
-  let messageContent: Message["content"] = draft ? draft : _messageContent;
+  let messageContent: MessageContent = draft ? draft : _messageContent;
 
   const setDraft = useDraftStore((state) => state.set);
   const deleteDraft = useDraftStore((state) => state.delete);
@@ -40,7 +39,7 @@ export default function useMessager() {
     await createMessage({ channelIdentifier, content: messageContent });
   }, [messageContent, deleteDraft, createMessage, channelIdentifier]);
   const setMessage = React.useCallback(
-    (content: Message["content"], concatenate: boolean = false) => {
+    (content: MessageContent, concatenate: boolean = false) => {
       if (concatenate) {
         const fullContent = messageContent + content;
         setMessageContent(fullContent);

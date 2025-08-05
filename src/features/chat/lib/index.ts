@@ -1,6 +1,6 @@
 import type { Id } from "@/convex/_generated/dataModel";
 import { useDraftStore, type Drafts } from "../hooks/useDraftStore";
-import type { Message } from "../types";
+import type { Message } from "../../channels/types";
 
 export function getChannelDraft(channelIdentifier: Id<"channels">) {
   const drafts: Drafts = useDraftStore.getState().drafts;

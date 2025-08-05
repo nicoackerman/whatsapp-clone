@@ -1,30 +1,29 @@
-import { MoreVertical, SearchIcon } from "lucide-react";
-import { BubbleIcon } from "~/components/ui/bubble-icon";
+"use client";
 import { UserAvatar } from "~/components/ui/user-avatar";
-import { cn } from "~/lib/utils";
-import DebugTrigger from "../debug/DebugTrigger";
-
+import { ChatHeader } from "~/features/chat/components/ChatHeader";
+import DebugTrigger from "~/features/debug/components/DebugTrigger";
 export default function ChannelHeader({
-  className,
   ...props
 }: React.ComponentProps<"div">) {
   // const currentThreadMeta = useChatStore((state) => state.currentChannelIdentifier)!;
 
   return (
-    <div className={cn("flex justify-between", className)} {...props}>
-      <div className="flex items-center gap-4">
+    <ChatHeader {...props}>
+      <ChatHeader.Left>
         <UserAvatar
           className="size-10"
           userName={"userName"}
           profileImg={"https://github.com/evilrabbit.png"}
         />
-        {/* <p className="text-base">{currentThreadMeta.threadName}</p> */}
-      </div>
-      <div className="flex items-center gap-3">
-        <BubbleIcon variant="gray" Icon={SearchIcon} />
-        <BubbleIcon variant="gray" Icon={MoreVertical} />
+      </ChatHeader.Left>
+      <ChatHeader.Right>
+        <ChatHeader.Menu>
+          <ChatHeader.MenuItem alt="Delete all messages" shortcut="c" />
+          <ChatHeader.MenuItem alt="Delete all messages" shortcut="c" />
+          <ChatHeader.MenuItem alt="Delete all messages" shortcut="c" />
+        </ChatHeader.Menu>
         <DebugTrigger />
-      </div>
-    </div>
+      </ChatHeader.Right>
+    </ChatHeader>
   );
 }
