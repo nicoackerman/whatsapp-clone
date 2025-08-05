@@ -1,12 +1,13 @@
-"use client";
-
 import { useState } from "react";
 import { ChevronDown, ChevronRight, Copy, Check } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
+// Define a more specific type for JSON data
+export type JsonData = | string | number | boolean | null | JsonData[] | { [key: string]: JsonData };
+
 export interface JsonBlockProps {
-  data: any;
+  data: JsonData;
   name?: string;
   level?: number;
   defaultExpanded?: boolean;
@@ -14,11 +15,11 @@ export interface JsonBlockProps {
 }
 
 interface JsonValueProps {
-  value: any;
+  value: JsonData;
   keyName?: string;
   level: number;
-  isLast?: boolean;
   defaultExpanded: boolean;
+  isLast?: boolean;
   maxLevel: number;
 }
 
@@ -35,9 +36,9 @@ const JsonValue = ({
   );
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async (text: string) => {
+  const handleCopy = (text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      void navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -45,7 +46,7 @@ const JsonValue = ({
     }
   };
 
-  const getValueType = (val: any): string => {
+  const getValueType = (val: JsonData): string => {
     if (val === null) return "null";
     if (Array.isArray(val)) return "array";
     return typeof val;
@@ -66,25 +67,19 @@ const JsonValue = ({
     }
   };
 
-  const formatValue = (val: any): string => {
-    const type = getValueType(val);
-    switch (type) {
-      case "string":
-        return `"${val}"`;
-      case "null":
-        return "null";
-      case "undefined":
-        return "undefined";
-      default:
-        return String(val);
-    }
+  const formatValue = (val: JsonData): string => {
+    if (typeof val === 'string') return `"${val}"`;
+    if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+    if (val === null) return "null";
+    if (Array.isArray(val) || typeof val === 'object') return JSON.stringify(val, null, 2);
+    return "";
   };
 
-  const isExpandable = (val: any): boolean => {
+  const isExpandable = (val: JsonData): boolean => {
     return val !== null && (typeof val === "object" || Array.isArray(val));
   };
 
-  const getObjectLength = (obj: any): number => {
+  const getObjectLength = (obj: JsonData): number => {
     if (Array.isArray(obj)) return obj.length;
     if (typeof obj === "object" && obj !== null) return Object.keys(obj).length;
     return 0;

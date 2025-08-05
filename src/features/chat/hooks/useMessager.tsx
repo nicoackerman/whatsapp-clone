@@ -26,7 +26,7 @@ export default function useMessager() {
     Draft methods for storaging stateless message content as drafts
   */
   const draft = getChannelDraft(channelIdentifier);
-  let messageContent: MessageContent = draft ? draft : _messageContent;
+  const messageContent: MessageContent = draft ?? _messageContent;
 
   const setDraft = useDraftStore((state) => state.set);
   const deleteDraft = useDraftStore((state) => state.delete);
@@ -39,7 +39,7 @@ export default function useMessager() {
     await createMessage({ channelIdentifier, content: messageContent });
   }, [messageContent, deleteDraft, createMessage, channelIdentifier]);
   const setMessage = React.useCallback(
-    (content: MessageContent, concatenate: boolean = false) => {
+    (content: MessageContent, concatenate = false) => {
       if (concatenate) {
         const fullContent = messageContent + content;
         setMessageContent(fullContent);

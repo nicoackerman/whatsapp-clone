@@ -3,7 +3,7 @@
 import React from "react";
 import useMessager from "../hooks/useMessager";
 import type { MessageContent } from "~/types";
-import { ArrowRight, SendIcon, StickerIcon } from "lucide-react";
+import { ArrowRight, StickerIcon } from "lucide-react";
 import { lazy, Suspense } from "react";
 import { BubbleIcon } from "~/components/ui/bubble-icon";
 import {
@@ -14,7 +14,6 @@ import {
 import { Theme, type PickerProps } from "emoji-picker-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
 import { BubbleAction } from "~/components/ui/bubble-action";
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
 
@@ -48,10 +47,9 @@ function MessageComposerProvider({ children }: MessageComposerProviderProps) {
     };
   }, [messageContent, setMessage, sendMessage]);
   return (
-    <MessageComposerContext.Provider
-      children={children}
-      value={contextResources}
-    />
+    <MessageComposerContext.Provider value={contextResources}>
+      {children}
+    </MessageComposerContext.Provider>
   );
 }
 
@@ -68,11 +66,7 @@ const useMessageComponser = () => {
 Compound components
 */
 
-export function ChatInput({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const { messageContent, setMessage, sendMessage } = useMessageComponser();
+export function ChatInput({ ...props }: React.ComponentProps<"div">) {
   return (
     <MessageComposerProvider>
       <div className="bg-transparent px-2 py-4">
@@ -108,8 +102,14 @@ ChatInput.SendButton = function SendButton({
 ChatInput.TypingBar = function TypingBar({
   ...props
 }: React.ComponentProps<"input">) {
+  const { sendMessage } = useMessageComponser();
   return (
-    <Input {...props} className="border-none" placeholder="type your message" />
+    <Input
+      onClick={() => sendMessage()}
+      {...props}
+      className="border-none"
+      placeholder="type your message"
+    />
   );
 };
 

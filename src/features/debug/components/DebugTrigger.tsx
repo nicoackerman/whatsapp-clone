@@ -18,7 +18,7 @@ function useDebugChat() {
   };
 }
 
-export default function DebugTrigger({}: {}) {
+export default function DebugTrigger() {
   const { channelIdentifier, drafts } = useDebugChat();
   return (
     <ChatDebugger>

@@ -20,11 +20,11 @@ export function ChatHeader({
   return <div className={cn("flex justify-between", className)} {...props} />;
 }
 
-ChatHeader.Left = function Left({ className, ...props }: React.ComponentProps<"div">) {
+ChatHeader.Left = function Left({ ...props }: React.ComponentProps<"div">) {
   return <div className="flex items-center gap-4" {...props} />;
 };
 
-ChatHeader.Right = function Right({ className, ...props }: React.ComponentProps<"div">) {
+ChatHeader.Right = function Right({ ...props }: React.ComponentProps<"div">) {
   return <div className="flex items-center gap-3" {...props} />;
 };
 
@@ -48,7 +48,10 @@ interface ChannelHeaderMenuItemProps {
   shortcut: string;
 }
 
-ChatHeader.MenuItem = function MenuItem({ alt, shortcut }: ChannelHeaderMenuItemProps) {
+ChatHeader.MenuItem = function MenuItem({
+  alt,
+  shortcut,
+}: ChannelHeaderMenuItemProps) {
   return (
     <DropdownMenuGroup>
       <DropdownMenuItem>
