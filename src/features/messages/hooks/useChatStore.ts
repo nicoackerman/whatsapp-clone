@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import type { Channel } from "~/features/channels/types";
+import type { ChannelIdentifier } from "~/types";
 
-export type ChannelIdentifier = Channel["_id"] | "placeholder";
+export type oldChannelIdentifier = ChannelIdentifier | "placeholder";
 
 interface ChatStoreSchema {
-  currentChannelIdentifier: ChannelIdentifier;
-  setThreadId: (channelIdentifier: Channel["_id"]) => void;
+  currentChannelIdentifier: ChannelIdentifier | "placeholder";
+  setThreadId: (channelIdentifier: ChannelIdentifier) => void;
 }
 
 const useChatStore = create<ChatStoreSchema>((set) => ({
