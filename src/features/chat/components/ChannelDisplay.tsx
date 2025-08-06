@@ -4,7 +4,8 @@ import { useChatStore } from "~/features/messages/hooks/useChatStore";
 import ChannelContent from "./ChannelContent";
 import ChannelHeader from "./ChannelHeader";
 import ChannelInput from "./ChannelInput";
-import type { ChannelIdentifier } from "../types";
+import type { ChannelIdentifier } from "~/types";
+
 
 export default function ChannelDisplay() {
   const currentChannelIdentifier: ChannelIdentifier | "placeholder" =

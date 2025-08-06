@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import useMessager from "../hooks/useMessager";
+import useMessager from "../../hooks/useMessager";
 import type { MessageContent } from "~/types";
 import { ArrowRight, StickerIcon } from "lucide-react";
 import { lazy, Suspense } from "react";

@@ -1,4 +1,4 @@
-import { ChatInput } from "~/features/chat/components/ChatInput";
+import { ChatInput } from "~/features/chat/components/ui/ChatInput";
 
 export default function ChannelInput({
   ...props

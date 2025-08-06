@@ -1,6 +1,6 @@
 "use client";
 import { UserAvatar } from "~/components/ui/user-avatar";
-import { ChatHeader } from "~/features/chat/components/ChatHeader";
+import { ChatHeader } from "~/features/chat/components/ui/ChatHeader";
 import DebugTrigger from "~/features/debug/components/DebugTrigger";
 export default function ChannelHeader({
   ...props
