@@ -244,7 +244,7 @@ export function JsonBlock({
   data,
   name = "root",
   level = 0,
-  defaultExpanded = true,
+  defaultExpanded = false,
   maxLevel = 2,
 }: JsonBlockProps) {
   if (data === undefined) {
@@ -258,16 +258,16 @@ export function JsonBlock({
     );
   }
 
-  let parsedData: JsonData;
+  let parsedData: JsonData = data;
+
   if (typeof data === "string") {
-    try {
-      parsedData = JSON.parse(data) as JsonData;
-    } catch (error) {
-      console.error(error);
-      parsedData = data;
+    if (data.trim().startsWith("{") || data.trim().startsWith("[")) {
+      try {
+        parsedData = JSON.parse(data) as JsonData;
+      } catch {
+        // It's just a string, not a stringified JSON.
+      }
     }
-  } else {
-    parsedData = data;
   }
   return (
     <div className="bg-muted/20 overflow-x-auto rounded-md border p-3 font-mono text-sm">

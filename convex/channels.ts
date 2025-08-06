@@ -63,6 +63,20 @@ export const getRecivers = query({
   },
 });
 
+export const getMessages = query({
+  args: { channelIdentifier: v.id("channels") },
+  async handler(ctx, args) {
+    await getAuthenticathedUser(ctx);
+
+    const messages: Doc<"messages">[] = await ctx.runQuery(
+      internal.messages.getByChannel,
+      { channelIdentifier: args.channelIdentifier },
+    );
+
+    return messages;
+  },
+});
+
 const getAuthenticathedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {

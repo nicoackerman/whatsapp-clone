@@ -56,7 +56,7 @@ export const create = mutation({
   },
 });
 
-export const getByChannel = query({
+export const getByChannel = internalQuery({
   args: { channelIdentifier: v.id("channels") },
   async handler(ctx, args) {
     const channelMessages = await ctx.db
