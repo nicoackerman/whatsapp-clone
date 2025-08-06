@@ -26,6 +26,7 @@ export default function useMessager() {
     Draft methods for storaging stateless message content as drafts
   */
   const draft = getChannelDraft(channelIdentifier);
+  console.log(draft, _messageContent);
   const messageContent: MessageContent = draft ?? _messageContent;
 
   const setDraft = useDraftStore((state) => state.set);

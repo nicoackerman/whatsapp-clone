@@ -2,7 +2,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { MoreVertical } from "lucide-react";
 import { BubbleIcon } from "~/components/ui/bubble-icon";
 import Link from "next/link";
-import ChannelSummariesList from "~/features/channels/components/summary/ChannelSummariesList";
+import ChannelSummariesList from "~/features/summary/components/ChannelSummariesList";
 
 export function LeftChatPanel() {
   return (

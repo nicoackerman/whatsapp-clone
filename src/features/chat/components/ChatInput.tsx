@@ -11,7 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { Theme, type PickerProps } from "emoji-picker-react";
+import { Theme } from "emoji-picker-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Input } from "~/components/ui/input";
 import { BubbleAction } from "~/components/ui/bubble-action";
@@ -28,8 +28,12 @@ interface ContextResources {
 }
 const MessageComposerContext = React.createContext<ContextResources>({
   messageContent: "",
-  sendMessage: async () => {},
-  setMessage: () => {},
+  sendMessage: async () => {
+    console.warn("sendMessage not implemented");
+  },
+  setMessage: () => {
+    console.warn("setMessage not implemented");
+  },
 });
 
 interface MessageComposerProviderProps {
@@ -90,30 +94,31 @@ ChatInput.Right = function Right({ ...props }: React.ComponentProps<"div">) {
 ChatInput.SendButton = function SendButton({
   ...props
 }: React.ComponentProps<"button">) {
+  const { sendMessage } = useMessageComponser();
   return (
     <BubbleAction
       Icon={ArrowRight}
       className="size-8 rounded-full bg-green-600 text-white"
       {...props}
+      onClick={() => sendMessage()}
     />
   );
 };
 
-ChatInput.TypingBar = function TypingBar({
-  ...props
-}: React.ComponentProps<"input">) {
-  const { sendMessage } = useMessageComponser();
+ChatInput.TypingBar = function TypingBar() {
+  const { setMessage, messageContent } = useMessageComponser();
   return (
     <Input
-      onClick={() => sendMessage()}
-      {...props}
+      onChange={(e) => setMessage(e.target.value)}
+      value={messageContent}
       className="border-none"
       placeholder="type your message"
     />
   );
 };
 
-ChatInput.EmojiPicker = function EmojiPickerButton(props: PickerProps) {
+ChatInput.EmojiPicker = function EmojiPickerButton() {
+  const { setMessage } = useMessageComponser();
   return (
     <Popover>
       <PopoverTrigger>
@@ -127,11 +132,17 @@ ChatInput.EmojiPicker = function EmojiPickerButton(props: PickerProps) {
         <Suspense
           fallback={
             <div className="p-2">
-              <Skeleton className="h-[400px] w-[600px] rounded-md" />
+              <Skeleton className="h-[400px] w-[400px] rounded-md" />
             </div>
           }
         >
-          <EmojiPicker {...props} theme={Theme.DARK} />
+          <EmojiPicker
+            onEmojiClick={(e) => {
+              setMessage(e.emoji, true);
+            }}
+            lazyLoadEmojis
+            theme={Theme.DARK}
+          />
         </Suspense>
       </PopoverContent>
     </Popover>

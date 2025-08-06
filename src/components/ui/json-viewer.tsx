@@ -4,7 +4,14 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
 // Define a more specific type for JSON data
-export type JsonData = | string | number | boolean | null | undefined | JsonData[] | { [key: string]: JsonData };
+export type JsonData =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | JsonData[]
+  | { [key: string]: JsonData };
 
 export interface JsonBlockProps {
   data: JsonData | string;
@@ -68,10 +75,11 @@ const JsonValue = ({
   };
 
   const formatValue = (val: JsonData): string => {
-    if (typeof val === 'string') return `"${val}"`;
-    if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+    if (typeof val === "string") return `"${val}"`;
+    if (typeof val === "number" || typeof val === "boolean") return String(val);
     if (val === null) return "null";
-    if (Array.isArray(val) || typeof val === 'object') return JSON.stringify(val, null, 2);
+    if (Array.isArray(val) || typeof val === "object")
+      return JSON.stringify(val, null, 2);
     return "";
   };
 
@@ -131,7 +139,7 @@ const JsonValue = ({
         )}
         <span
           className={cn(
-            "font-mono text-sm overflow-wrap-break-word word-break-all",
+            "overflow-wrap-break-word word-break-all font-mono text-sm",
             getValueColor(getValueType(value)),
           )}
         >
@@ -241,25 +249,28 @@ export function JsonBlock({
 }: JsonBlockProps) {
   if (data === undefined) {
     return (
-      <div className="bg-muted/20 rounded-md border p-3 font-mono text-sm overflow-x-auto">
-        <div className="text-muted-foreground mb-2 font-sans text-xs">{name}</div>
+      <div className="bg-muted/20 overflow-x-auto rounded-md border p-3 font-mono text-sm">
+        <div className="text-muted-foreground mb-2 font-sans text-xs">
+          {name}
+        </div>
         <span className="text-gray-500 dark:text-gray-400">undefined</span>
       </div>
     );
   }
 
   let parsedData: JsonData;
-  if (typeof data === 'string') {
+  if (typeof data === "string") {
     try {
       parsedData = JSON.parse(data) as JsonData;
     } catch (error) {
+      console.error(error);
       parsedData = data;
     }
   } else {
     parsedData = data;
   }
   return (
-    <div className="bg-muted/20 rounded-md border p-3 font-mono text-sm overflow-x-auto">
+    <div className="bg-muted/20 overflow-x-auto rounded-md border p-3 font-mono text-sm">
       <div className="text-muted-foreground mb-2 font-sans text-xs">{name}</div>
       <JsonValue
         value={parsedData}

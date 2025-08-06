@@ -24,18 +24,15 @@ export default function DebugTrigger() {
     <ChatDebugger>
       <ChatDebugger.Top>
         <ChatDebugger.Indicator>
-          <ChatDebugger.Title>Current Channel Identifier:</ChatDebugger.Title>
           <ChatDebugger.Block
-            name="ChannelIdentifier"
+            name="currentChannel"
             data={channelIdentifier}
           />
         </ChatDebugger.Indicator>
         <ChatDebugger.Indicator>
-          <ChatDebugger.Title>Current Draft Identifier</ChatDebugger.Title>
-          <ChatDebugger.Block name="drafts" data={drafts[channelIdentifier]} />
+          <ChatDebugger.Block name="currentDraft" data={drafts[channelIdentifier]} />
         </ChatDebugger.Indicator>
         <ChatDebugger.Indicator>
-          <ChatDebugger.Title>All Drafts</ChatDebugger.Title>
           <ChatDebugger.Block name="drafts" data={drafts} />
         </ChatDebugger.Indicator>
       </ChatDebugger.Top>
