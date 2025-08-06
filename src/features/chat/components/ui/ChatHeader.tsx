@@ -28,7 +28,7 @@ ChatHeader.Right = function Right({ ...props }: React.ComponentProps<"div">) {
   return <div className="flex items-center gap-3" {...props} />;
 };
 
-ChatHeader.Menu = function Menu({ children }: React.ComponentProps<"div">) {
+ChatHeader.Menu = function Menu({ children }: Readonly<React.ComponentProps<"div">>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

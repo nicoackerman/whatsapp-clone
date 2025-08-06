@@ -42,7 +42,7 @@ ChatDebugger.Indicator = function Indicator({ ...props }: React.ComponentProps<"
   return <div className="flex flex-col gap-4" {...props} />;
 };
 
-ChatDebugger.Title = function Title({ children }: React.ComponentProps<"div">) {
+ChatDebugger.Title = function Title({ children }: Readonly<React.ComponentProps<"div">>) {
   return <div className="mt-4 text-soft-white">{children}</div>;
 };
 

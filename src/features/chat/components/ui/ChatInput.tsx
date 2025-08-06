@@ -40,7 +40,7 @@ interface MessageComposerProviderProps {
   children: React.ReactNode;
 }
 
-function MessageComposerProvider({ children }: MessageComposerProviderProps) {
+function MessageComposerProvider({ children }: Readonly<MessageComposerProviderProps>) {
   const { sendMessage, setMessage, messageContent } = useMessager();
 
   const contextResources = React.useMemo<ContextResources>(() => {
