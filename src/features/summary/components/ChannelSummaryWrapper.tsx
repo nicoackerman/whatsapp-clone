@@ -1,20 +1,20 @@
 "use client";
 import React from "react";
 import { useChatStore } from "../../messages/hooks/useChatStore";
-import type { Channel, ThreadSummary } from "../../channels/types";
 import ChannelSummaryUI from "./ChannelSummaryUI";
+import type { ChannelIdentifier } from "~/types";
+import type { Preview } from "@/convex/threads";
 
 interface ChannelSummaryWrapperProps {
-  summary: ThreadSummary;
+  summary: Preview;
 }
 
 export default function ChannelSummaryWrapper({
   summary,
 }: ChannelSummaryWrapperProps) {
   const setThreadId = useChatStore((state) => state.setThreadId);
-  const currentChannelIdentifier: Channel["_id"] | "placeholder" = useChatStore(
-    (state) => state.currentChannelIdentifier,
-  );
+  const currentChannelIdentifier: ChannelIdentifier | "placeholder" =
+    useChatStore((state) => state.currentChannelIdentifier);
 
   const { channelIdentifier, user: reciver } = summary;
   const { profileImg, firstName } = reciver;

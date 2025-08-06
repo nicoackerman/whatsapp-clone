@@ -3,16 +3,16 @@
 import React from "react";
 import { Button } from "~/components/ui/button";
 import clsx from "clsx";
-import type { Channel } from "../../channels/types";
 import { UserAvatar } from "~/components/ui/user-avatar";
+import type { ChannelIdentifier } from "~/types";
 
 interface ChannelSummaryProps {
   onView: boolean;
   profileImg: string;
   userName: string;
   lastMessage: string;
-  channelIdentifier: Channel["_id"];
-  setAsCurrentThread: (newThreadId: Channel["_id"]) => void;
+  channelIdentifier: ChannelIdentifier;
+  setAsCurrentThread: (newThreadId: ChannelIdentifier) => void;
 }
 
 export default function ChannelSummaryUI({

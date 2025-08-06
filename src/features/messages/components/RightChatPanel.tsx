@@ -3,10 +3,10 @@ import React from "react";
 import MessagesPanelPlaceHolder from "./MessagesPanelPlaceholder";
 import ChannelDisplay from "~/features/chat/components/ChannelDisplay";
 import { useChatStore } from "../hooks/useChatStore";
-import type { Channel } from "~/features/channels/types";
+import type { ChannelIdentifier } from "~/types";
 
 export function RightChatPanel() {
-  const currentThreadId: Channel["_id"] | "placeholder" = useChatStore(
+  const currentThreadId: ChannelIdentifier | "placeholder" = useChatStore(
     (state) => state.currentChannelIdentifier,
   );
 

@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import type { Channel, Message } from "~/features/channels/types";
+import type { ChannelIdentifier, MessageContent } from "~/types";
 
-export type Drafts = Partial<Record<Channel["_id"], Message["content"]>>;
+export type Drafts = Partial<Record<ChannelIdentifier, MessageContent>>;
 interface DraftStoreSchema {
   drafts: Drafts;
-  set: (channelIdentifier: Channel["_id"], content: Message["content"]) => void;
-  delete: (channelIdentifier: Channel["_id"]) => void;
+  set: (channelIdentifier: ChannelIdentifier, content: MessageContent) => void;
+  delete: (channelIdentifier: ChannelIdentifier) => void;
 }
 
 const useDraftStore = create<DraftStoreSchema>((set) => ({
