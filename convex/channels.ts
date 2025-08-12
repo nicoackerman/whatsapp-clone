@@ -5,6 +5,15 @@ import {
   query,
   type QueryCtx,
 } from "./_generated/server";
+
+export type Messages = Omit<
+  Doc<"messages">,
+  "senderIdentifier" | "channelIdentifier"
+> & {
+  iamOwner: boolean;
+  owner: PublicProfile;
+};
+
 import { internal } from "./_generated/api";
 import type { Doc } from "./_generated/dataModel";
 import { PublicProfile } from "./users";
@@ -67,7 +76,7 @@ export const getRecivers = query({
 export const getMessages = query({
   args: { channelIdentifier: v.id("channels") },
   async handler(ctx, args) {
-    await getAuthenticathedUser(ctx);
+    const { user } = await getAuthenticathedUser(ctx);
 
     // gets all the object messages in the db
     const _messages: Doc<"messages">[] = await ctx.runQuery(
@@ -87,7 +96,9 @@ export const getMessages = query({
         );
 
         const { content, _creationTime, _id } = _message;
-        return { content, _creationTime, _id, owner };
+        const iamOwner = user._id == _message.senderIdentifier;
+
+        return { content, _creationTime, _id, owner, iamOwner };
       }),
     );
 

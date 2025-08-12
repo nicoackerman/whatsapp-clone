@@ -1,12 +1,38 @@
-import { cn } from "~/lib/utils";
+import { api } from "@/convex/_generated/api";
+import { useConvexAuth, useQuery } from "convex/react";
+import { ChatContent, MessageList } from "./ui/ChatContent";
+import { useChatStore } from "~/features/messages/hooks/useChatStore";
+import type { ChannelIdentifier } from "~/types";
 
-export default function ChannelContent({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div className={cn("flex grow flex-col", className)} {...props}>
-      Hola!!
-    </div>
+export function useChannelMessages() {
+  const { isLoading, isAuthenticated } = useConvexAuth();
+  const channelIdentifer = useChatStore(
+    (state) => state.currentChannelIdentifier,
+  ) as ChannelIdentifier;
+  const messages = useQuery(
+    api.channels.getMessages,
+    isLoading || !isAuthenticated
+      ? "skip"
+      : {
+          channelIdentifier: channelIdentifer,
+        },
   );
+
+  const loading = isLoading && !messages;
+  return { loading, messages };
+}
+
+export default function ChannelContent() {
+  const { loading, messages } = useChannelMessages();
+
+  if (loading || !messages) {
+    return <div>Loading</div>;
+  }
+
+  return (
+    <ChatContent>
+      <MessageList messages={messages} />
+    </ChatContent>
+  );
+  
 }
