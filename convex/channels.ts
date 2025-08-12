@@ -7,6 +7,7 @@ import {
 } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { Doc } from "./_generated/dataModel";
+import { PublicProfile } from "./users";
 export const create = internalMutation({
   args: {
     type: v.union(v.literal("thread"), v.literal("server")),
@@ -68,9 +69,26 @@ export const getMessages = query({
   async handler(ctx, args) {
     await getAuthenticathedUser(ctx);
 
-    const messages: Doc<"messages">[] = await ctx.runQuery(
+    // gets all the object messages in the db
+    const _messages: Doc<"messages">[] = await ctx.runQuery(
       internal.messages.getByChannel,
       { channelIdentifier: args.channelIdentifier },
+    );
+
+    // transoform the messages from db to show all
+    // the data from messages in a single query
+    const messages = Promise.all(
+      _messages.map(async (_message) => {
+        const owner: PublicProfile = await ctx.runQuery(
+          internal.users.getPublicProfile,
+          {
+            userIdentifier: _message.senderIdentifier,
+          },
+        );
+
+        const { content, _creationTime, _id } = _message;
+        return { content, _creationTime, _id, owner };
+      }),
     );
 
     return messages;

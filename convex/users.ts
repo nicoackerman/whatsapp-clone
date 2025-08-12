@@ -1,5 +1,14 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, query, type QueryCtx } from "./_generated/server";
+import {
+  internalMutation,
+  internalQuery,
+  query,
+  type QueryCtx,
+} from "./_generated/server";
+import { Doc } from "./_generated/dataModel";
+
+export type PublicProfile = Omit<Doc<"users">, "_creationTime" | "tokenIdentifier">;
+
 /* CRUD */
 export const create = internalMutation({
   args: {
@@ -58,6 +67,21 @@ export const getMe = query({
   handler: async (ctx, args) => {
     const { user } = await getAuthenticathedUser(ctx);
     return user;
+  },
+});
+
+export const getPublicProfile = internalQuery({
+  args: { userIdentifier: v.id("users") },
+  handler: async (ctx, args) => {
+    await getAuthenticathedUser(ctx);
+    const user = await ctx.db.get(args.userIdentifier);
+
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+
+    const { _id, firstName, lastName, profileImg } = user;
+    return { _id, firstName, lastName, profileImg };
   },
 });
 
