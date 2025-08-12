@@ -5,6 +5,9 @@ import {
   query,
   type QueryCtx,
 } from "./_generated/server";
+import { internal } from "./_generated/api";
+import type { Doc } from "./_generated/dataModel";
+import type { PublicProfile } from "./users";
 
 export type Messages = Omit<
   Doc<"messages">,
@@ -14,9 +17,6 @@ export type Messages = Omit<
   owner: PublicProfile;
 };
 
-import { internal } from "./_generated/api";
-import type { Doc } from "./_generated/dataModel";
-import { PublicProfile } from "./users";
 export const create = internalMutation({
   args: {
     type: v.union(v.literal("thread"), v.literal("server")),
