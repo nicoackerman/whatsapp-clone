@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollArea } from "~/components/ui/scroll-area";
 import type { MessageDoc } from "~/types";
 
 /**
@@ -92,15 +93,16 @@ export function Message({ message }: { message: MessageDoc }) {
 export function ChatContent({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <div>{children}</div>;
+  return <div className="flex grow">{children}</div>;
 }
 
 export function MessageList({ messages }: { messages: MessageDoc[] }) {
+  console.log("m: ", messages);
   return (
-    <div>
+    <ScrollArea>
       {messages.map((message: MessageDoc) => (
         <Message key={message._id} message={message} />
       ))}
-    </div>
+    </ScrollArea>
   );
 }

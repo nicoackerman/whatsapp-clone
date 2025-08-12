@@ -1,3 +1,5 @@
+"use client";
+
 import { api } from "@/convex/_generated/api";
 import { useConvexAuth, useQuery } from "convex/react";
 import { ChatContent, MessageList } from "./ui/ChatContent";
@@ -34,5 +36,4 @@ export default function ChannelContent() {
       <MessageList messages={messages} />
     </ChatContent>
   );
-  
 }
