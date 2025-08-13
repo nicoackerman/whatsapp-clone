@@ -5,10 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function generateRandomColor(
-  min: number = 60,
-  max: number = 200,
-): string {
+export function generateRandomColor(min = 60, max = 200): string {
   const clamp = (v: number): number => Math.max(min, Math.min(max, v));
 
   const r: number = clamp(Math.floor(Math.random() * 256));
