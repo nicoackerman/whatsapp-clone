@@ -5,6 +5,34 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function generateRandomColor(
+  min: number = 60,
+  max: number = 200,
+): string {
+  const clamp = (v: number): number => Math.max(min, Math.min(max, v));
+
+  const r: number = clamp(Math.floor(Math.random() * 256));
+  const g: number = clamp(Math.floor(Math.random() * 256));
+  const b: number = clamp(Math.floor(Math.random() * 256));
+
+  return (
+    "#" +
+    [r, g, b]
+      .map((x) => x.toString(16).padStart(2, "0"))
+      .join("")
+      .toUpperCase()
+  );
+}
+
+export function formatToHourMinute(date_ms: number) {
+  const date = new Date(date_ms).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+  return date;
+}
+
 export function formatDate(date_ms: number) {
   const date_seconds = date_ms / 1000;
   const date_obj = new Date(date_seconds * 1000);
