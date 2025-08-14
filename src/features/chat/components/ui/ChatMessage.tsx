@@ -1,7 +1,8 @@
 "use client";
-import { formatToHourMinute } from "~/lib/utils";
+import { cn, formatToHourMinute } from "~/lib/utils";
 import type { MessageDoc } from "~/types";
 import React, { createContext, useContext } from "react";
+import { cva } from "class-variance-authority";
 
 // Context to hold message data
 const MessageContext = createContext<MessageDoc | null>(null);
@@ -21,13 +22,20 @@ const useMessage = () => {
 const Timestamp = () => {
   const { _creationTime } = useMessage();
   const date = formatToHourMinute(_creationTime);
-  return <span className="text-sm">{date}</span>;
+  return (
+    <span className="text-soft-gray dark:text-soft-white text-xs">{date}</span>
+  );
 };
 
 const OwnerBadge = () => {
   const { iamOwner, owner } = useMessage();
   const ownerName = iamOwner ? "You" : owner.firstName;
-  return <span className="text-gray-700 dark:text-[#B5FFD9]">~{ownerName}</span>;
+
+  const baseClass = "text-sm";
+  const ownerColor = iamOwner
+    ? "text-black dark:text-white"
+    : "orange-400 dark:text-orange-400";
+  return <span className={cn(baseClass, ownerColor)}>~{ownerName}</span>;
 };
 
 const Content = () => {
@@ -37,14 +45,14 @@ const Content = () => {
 
 const MessageRight = ({ children }: { children: React.ReactNode }) => (
   <div className="flex w-full justify-end">
-    <div className="bg-green-200 dark:bg-dark-green mb-4 flex max-w-1/2 flex-col justify-end rounded-sm p-2">
+    <div className="bg-light-green dark:bg-dark-green mb-4 flex max-w-1/2 min-w-[120px] flex-col justify-end rounded-sm p-2">
       {children}
     </div>
   </div>
 );
 
 const MessageLeft = ({ children }: { children: React.ReactNode }) => (
-  <div className="bg-gray-200 dark:bg-secondary-black mb-4 flex max-w-1/2 justify-start rounded-xs">
+  <div className="dark:bg-secondary-black mb-4 flex max-w-1/2 min-w-[120px] justify-start rounded-xs bg-gray-200">
     {children}
   </div>
 );

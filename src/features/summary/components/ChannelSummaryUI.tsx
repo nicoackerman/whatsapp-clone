@@ -40,7 +40,7 @@ export default function ChannelSummaryUI({
       />
       <div className="flex grow flex-col items-start overflow-hidden text-left">
         <h3 className="text-base font-medium">{userName}</h3>
-        <p className="text-soft-gray dark:text-soft-white line-clamp-1 text-sm">
+        <p className="text-soft-gray dark:text-soft-white line-clamp-1 max-w-50 truncate text-sm">
           {lastMessage}
         </p>
       </div>

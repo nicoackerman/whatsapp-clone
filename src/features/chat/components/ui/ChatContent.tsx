@@ -7,12 +7,16 @@ import ChatMessage from "./ChatMessage";
 export function ChatContent({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <div className="flex min-h-0 flex-1 bg-blue-500">{children}</div>;
+  return (
+    <div className="flex min-h-0 flex-1 items-center justify-center">
+      {children}
+    </div>
+  );
 }
 
 export function MessageList({ messages }: { messages: MessageDoc[] }) {
   return (
-    <ScrollArea className="size-full bg-amber-200">
+    <ScrollArea className="size-full">
       {messages.map((message: MessageDoc) => (
         <ChatMessage key={message._id} message={message} />
       ))}

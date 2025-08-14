@@ -10,7 +10,7 @@
   --color-soft-white: oklch(1 0 0 / 0.6);
   --color-ghost-gray: oklch(0.6274 0.0554 257.62 / 0.2);
   --color-dark-green: oklch(0.3606 0.052 166.14);
-  --color-light-green: oklch(0.3606 0.052 166.14);
+  --color-light-green: oklch(0.905 0.105 146.6);
 }
 
 :root {

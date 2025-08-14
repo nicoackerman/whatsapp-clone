@@ -5,6 +5,7 @@ import { useConvexAuth, useQuery } from "convex/react";
 import { ChatContent, MessageList } from "./ui/ChatContent";
 import { useChatStore } from "~/features/messages/hooks/useChatStore";
 import type { ChannelIdentifier } from "~/types";
+import { LoadingSpinner } from "~/components/ui/loading-spinner";
 
 export function useChannelMessages() {
   const { isLoading, isAuthenticated } = useConvexAuth();
@@ -28,7 +29,11 @@ export default function ChannelContent() {
   const { loading, messages } = useChannelMessages();
 
   if (loading || !messages) {
-    return <div>Loading</div>;
+    return (
+      <ChatContent>
+        <LoadingSpinner />
+      </ChatContent>
+    );
   }
 
   return (
