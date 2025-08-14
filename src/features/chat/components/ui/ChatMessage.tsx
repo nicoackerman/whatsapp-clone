@@ -2,7 +2,6 @@
 import { cn, formatToHourMinute } from "~/lib/utils";
 import type { MessageDoc } from "~/types";
 import React, { createContext, useContext } from "react";
-import { cva } from "class-variance-authority";
 
 // Context to hold message data
 const MessageContext = createContext<MessageDoc | null>(null);
