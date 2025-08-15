@@ -12,6 +12,9 @@ This is due to a usage of the library svix
 /* 
 Grabs the secret token to verify the webhook from your .env file.
 */
+if (!process.env.CLERK_WEBHOOK_SECRET) {
+  throw Error("no Clerk webhook key");
+}
 const WEB_HOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET as string;
 export const fulfill = internalAction({
   args: {

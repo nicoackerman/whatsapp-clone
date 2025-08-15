@@ -13,7 +13,7 @@ export interface Preview {
   user: Doc<"users">;
   lastMessage: Doc<"messages"> | null;
 }
-const getAuthenticathedUser = async (ctx: QueryCtx) => {
+const getAuthenticatedUser = async (ctx: QueryCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
     throw new ConvexError("Unauthorized");
@@ -25,7 +25,7 @@ const getAuthenticathedUser = async (ctx: QueryCtx) => {
       q.eq("tokenIdentifier", identity.tokenIdentifier),
     )
     .unique();
-  console.log(identity, user);
+
   if (!user) {
     throw new ConvexError("User not found");
   }
@@ -69,7 +69,7 @@ const getThreadsSummary = async (ctx: QueryCtx, threads: Doc<"threads">[]) => {
 export const create = mutation({
   args: { receiverIdentifier: v.id("users") },
   async handler(ctx, args) {
-    await getAuthenticathedUser(ctx);
+    await getAuthenticatedUser(ctx);
 
     const channelIdentifier = (await ctx.runMutation(internal.channels.create, {
       type: "thread",
@@ -84,7 +84,21 @@ export const create = mutation({
 
 export const get = internalQuery({
   async handler(ctx) {
-    await getAuthenticathedUser(ctx);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Unauthorized");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier),
+      )
+      .unique();
+
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
 
     const allChannels: Doc<"channels">[] = await ctx.runQuery(
       internal.channels.get,
@@ -109,7 +123,22 @@ export const get = internalQuery({
 
 export const getSummary = query({
   async handler(ctx) {
-    await getAuthenticathedUser(ctx);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Unauthorized");
+    }
+
+    console.log(identity.tokenIdentifier);
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier),
+      )
+      .unique();
+
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
 
     const threads = await ctx.runQuery(internal.threads.get);
     const summary = await getThreadsSummary(ctx, threads);
