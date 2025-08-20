@@ -6,25 +6,15 @@ import {
   type QueryCtx,
 } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
-const getAuthenticathedUser = async (ctx: QueryCtx) => {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) {
-    throw new ConvexError("Unauthorized");
-  }
+import { getAuthenticatedUser } from "./lib/auth-helpers";
+import { SafeUser } from "./types";
+import { internal } from "./_generated/api";
 
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_tokenIdentifier", (q) =>
-      q.eq("tokenIdentifier", identity.tokenIdentifier),
-    )
-    .unique();
-
-  if (!user) {
-    throw new ConvexError("User not found");
-  }
-
-  return { user, identity };
-};
+/*
+**********
+HELPERS
+**********
+*/
 
 const createrRelationsFromList = async (
   ctx: MutationCtx,
@@ -48,7 +38,7 @@ export const create = internalMutation({
     recieversIdentifier: v.array(v.id("users")),
   },
   async handler(ctx, args) {
-    const { user } = await getAuthenticathedUser(ctx);
+    const { user } = await getAuthenticatedUser(ctx);
     const targets = [user._id, ...args.recieversIdentifier];
 
     const relationIdentifiers = await createrRelationsFromList(
@@ -62,7 +52,7 @@ export const create = internalMutation({
 
 export const get = internalQuery({
   async handler(ctx) {
-    const { user } = await getAuthenticathedUser(ctx);
+    const { user } = await getAuthenticatedUser(ctx);
 
     let channels = await ctx.db
       .query("userChannels")
@@ -72,38 +62,41 @@ export const get = internalQuery({
   },
 });
 
+/**
+ * Retrieves the receivers of a channel (the users associated with the channel,
+ * excluding the authenticated user making the request).
+ *
+ * @function getRecieversByChannel
+ * @param ctx - Convex query context (handles auth and DB)
+ * @param args - Query arguments
+ * @param args.channelIdentifier - Unique identifier of the channel
+ *
+ * @throws {ConvexError} If an authentication error or invalid reference occurs
+ *
+ */
+
 export const getRecieversByChannel = internalQuery({
   args: {
     channelIdentifier: v.id("channels"),
   },
   async handler(ctx, args) {
-    const { user } = await getAuthenticathedUser(ctx);
+    const { user } = await getAuthenticatedUser(ctx);
 
-    // Gets the channel and user relations by channel id
-    let relationsFromChannel = await ctx.db
-      .query("userChannels")
-      .withIndex("by_channelIdentifier", (q) =>
-        q.eq("channelIdentifier", args.channelIdentifier),
-      )
-      .collect();
-    // Gets the channel and user relations that do not contain the current user (recievers)
-    let channels = relationsFromChannel.filter(
-      (relation: Doc<"userChannels">) => relation.userIdentifier != user._id,
+    // Step 1: fetch user-channel relations by channel id
+    const relationsFromChannel = await getRelationsByChannel(
+      ctx,
+      args.channelIdentifier,
     );
 
-    // Gets the users associated to a channel
-    let recievers = (
-      await Promise.all(
-        channels.map(async (reciever) => {
-          const recevier = await ctx.db
-            .query("users")
-            .withIndex("by_id", (q) => q.eq("_id", reciever.userIdentifier))
-            .collect();
-          if (!recevier) throw new ConvexError("Bad reference at userChannels");
-          return recevier;
-        }),
-      )
-    ).flat();
+    // Step 2: filter relations, excluding the current user
+    const recieverRelations = filterOutCurrentUser(
+      relationsFromChannel,
+      user._id,
+    );
+
+    // Step 3: retrieve the users associated with those relations
+    const recievers = await getUsersFromRelations(ctx, recieverRelations);
+
     return recievers;
   },
 });
@@ -113,7 +106,7 @@ export const getUsersByChannel = internalQuery({
     channelIdentifier: v.id("channels"),
   },
   async handler(ctx, args) {
-    const { user } = await getAuthenticathedUser(ctx);
+    const { user } = await getAuthenticatedUser(ctx);
 
     // Gets the channel and user relations by channel id
     let relationsOfChannel = await ctx.db
@@ -131,7 +124,8 @@ export const getUsersByChannel = internalQuery({
             .query("users")
             .withIndex("by_id", (q) => q.eq("_id", relation.userIdentifier))
             .collect();
-          if (!recievier) throw new ConvexError("Bad reference at userChannels");
+          if (!recievier)
+            throw new ConvexError("Bad reference at userChannels");
           return recievier;
         }),
       )
@@ -139,3 +133,70 @@ export const getUsersByChannel = internalQuery({
     return recievers;
   },
 });
+
+/*
+**********
+HELPERS
+**********
+*/
+
+/**
+ * Retrieves the `userChannel` relations associated with a specific channel.
+ *
+ * @param ctx - Convex query context
+ * @param channelId - Unique identifier of the channel
+ * @returns List of user-channel relations
+ */
+async function getRelationsByChannel(ctx: QueryCtx, channelId: Id<"channels">) {
+  return ctx.db
+    .query("userChannels")
+    .withIndex("by_channelIdentifier", (q) =>
+      q.eq("channelIdentifier", channelId),
+    )
+    .collect();
+}
+
+/**
+ * Filters out relations belonging to the current user.
+ *
+ * @param relations - List of user-channel relations
+ * @param currentUserId - Identifier of the authenticated user
+ * @returns Relations excluding the current user
+ */
+function filterOutCurrentUser(
+  relations: Doc<"userChannels">[],
+  currentUserId: Id<"users">,
+) {
+  return relations.filter(
+    (relation: Doc<"userChannels">) =>
+      relation.userIdentifier !== currentUserId,
+  );
+}
+
+/**
+ * Retrieves users from user-channel relations.
+ *
+ * @param ctx - Convex query context
+ * @param relations - Filtered relations (excluding the current user)
+ * @returns List of users associated with the given relations
+ * @throws ConvexError if a relation references a non-existent user
+ */
+async function getUsersFromRelations(
+  ctx: QueryCtx,
+  relations: Doc<"userChannels">[],
+) {
+  const users = await Promise.all(
+    relations.map(async (relation: Doc<"userChannels">) => {
+      const user: SafeUser = await ctx.runQuery(
+        internal.users.getPublicProfile,
+        { userIdentifier: relation.userIdentifier },
+      );
+
+      if (!user) throw new ConvexError("Bad reference at userChannels");
+      return user;
+    }),
+  );
+
+  // Flatten results because each query returns an array
+  return users.flat();
+}
