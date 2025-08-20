@@ -7,64 +7,91 @@ import {
 } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
+import { getAuthenticatedUser } from "./lib/auth-helpers";
+import { ChannelSummary, SafeUser } from "./types";
+import { getLastChannelMessage } from "./lib/messages-helper";
 
-export interface Preview {
-  channelIdentifier: Id<"channels">;
-  user: Doc<"users">;
-  lastMessage: Doc<"messages"> | null;
-}
-const getAuthenticatedUser = async (ctx: QueryCtx) => {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) {
-    throw new ConvexError("Unauthorized");
-  }
+/*
+**********
+HELPERS
+**********
+*/
 
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_tokenIdentifier", (q) =>
-      q.eq("tokenIdentifier", identity.tokenIdentifier),
-    )
-    .unique();
+/**
+ * Retrieves the peer user in a thread (the other member of the channel
+ * different from the current user).
+ *
+ * @param ctx - The Convex query context
+ * @param thread - The thread document containing the channel identifier
+ * @returns The user document representing the peer member of the channel
+ * @throws ConvexError if no peer user is found
+ */
 
-  if (!user) {
-    throw new ConvexError("User not found");
-  }
-
-  return { user, identity };
-};
-
-const getReciver = async (ctx: QueryCtx, thread: Doc<"threads">) => {
+const getPeer = async (ctx: QueryCtx, channelIdentifier: Id<"channels">) => {
   const recivers = await ctx.runQuery(
     internal.userChannels.getRecieversByChannel,
     {
-      channelIdentifier: thread.channelIdentifier,
+      channelIdentifier: channelIdentifier,
     },
   );
   if (!recivers || !recivers[0]) throw new ConvexError("Recivers not found");
-  return recivers[0] as Doc<"users">;
+  return recivers[0] as SafeUser;
 };
 
-const getLastMessage = async (ctx: QueryCtx, thread: Doc<"threads">) => {
-  const lastMessage = await ctx.runQuery(internal.messages.getLastMessage, {
-    channelIdentifier: thread.channelIdentifier,
-  });
-
-  return lastMessage;
-};
-const getThreadsSummary = async (ctx: QueryCtx, threads: Doc<"threads">[]) => {
-  const previews: Preview[] = await Promise.all(
+/**
+ * Builds chat summaries from a list of threads.
+ *
+ * Each summary includes:
+ * - The channel identifier
+ * - The peer's profile image
+ * - The peer's first name
+ * - The last message sent in the channel
+ *
+ * @function assembleChatSummaries
+ * @param ctx - Convex query context (used to fetch peer and last message).
+ * @param threads - List of thread documents to summarize.
+ * @returns {Promise<ChannelSummary[]>} A list of chat summaries.
+ *
+ * @throws {ConvexError} If peer or last message lookups fail.
+ */
+const assembleChatSummaries = async (
+  ctx: QueryCtx,
+  threads: Doc<"threads">[],
+) => {
+  const previews: ChannelSummary[] = await Promise.all(
     threads.map(async (thread) => {
-      const receiver = await getReciver(ctx, thread);
-      const lastMessage = await getLastMessage(ctx, thread);
+      const { channelIdentifier } = thread;
+      const receiver = await getPeer(ctx, channelIdentifier);
+      const lastMessage = await getLastChannelMessage(ctx, channelIdentifier);
+
       return {
-        channelIdentifier: thread.channelIdentifier,
-        user: receiver,
+        channelIdentifier: channelIdentifier,
+        profileImgUrl: receiver.profileImg,
+        channelName: receiver.firstName,
         lastMessage: lastMessage,
       };
     }),
   );
   return previews;
 };
+
+/*
+**********
+CORE ENPOINTS
+**********
+*/
+
+/**
+ * Creates a new thread between the authenticated user and a receiver.
+ *
+ * This mutation ensures that the user is authenticated, creates a new channel
+ * of type "thread" with the given receiver, and then inserts a corresponding
+ * thread document linked to that channel.
+ *
+ * @param receiverIdentifier - The unique identifier of the user to start a thread with
+ * @returns The identifier of the newly created thread document
+ * @throws ConvexError if the user is not authenticated
+ */
 
 export const create = mutation({
   args: { receiverIdentifier: v.id("users") },
@@ -82,23 +109,16 @@ export const create = mutation({
   },
 });
 
+/**
+ * Retrieves all threads associated with the currently authenticated user.
+ * This is an internal query and should not be exposed directly to the client.
+ *
+ * @returns an array of thread documents.
+ * @throws ConvexError if the user is not authenticated or if a thread reference is broken.
+ */
 export const get = internalQuery({
   async handler(ctx) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Unauthorized");
-    }
-
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_tokenIdentifier", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier),
-      )
-      .unique();
-
-    if (!user) {
-      throw new ConvexError("User not found");
-    }
+    await getAuthenticatedUser(ctx);
 
     const allChannels: Doc<"channels">[] = await ctx.runQuery(
       internal.channels.get,
@@ -121,27 +141,22 @@ export const get = internalQuery({
   },
 });
 
-export const getSummary = query({
+/**
+ * Retrieves a list of chat summaries for the authenticated user.
+ *
+ * @function getChatSummaries
+ * @param ctx - Convex query context (handles authentication and DB access).
+ * @returns A list of chat summaries (ChannelSummary[]) associated with the current user.
+ *
+ * @throws {ConvexError} If the user is not authenticated.
+ */
+
+export const getChatSummaries = query({
   async handler(ctx) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Unauthorized");
-    }
-
-    console.log(identity.tokenIdentifier);
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_tokenIdentifier", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier),
-      )
-      .unique();
-
-    if (!user) {
-      throw new ConvexError("User not found");
-    }
+    await getAuthenticatedUser(ctx);
 
     const threads = await ctx.runQuery(internal.threads.get);
-    const summary = await getThreadsSummary(ctx, threads);
-    return summary;
+    const summaries = await assembleChatSummaries(ctx, threads);
+    return summaries;
   },
 });
