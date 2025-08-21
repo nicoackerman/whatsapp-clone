@@ -8,7 +8,7 @@ import {
 import { internal } from "./_generated/api";
 import type { Doc } from "./_generated/dataModel";
 import { getAuthenticatedUser } from "./lib/auth-helpers";
-import { ChannelSummary, SafeUser } from "./types";
+import type { ChannelSummary, SafeUser } from "./types";
 
 /*
 **********

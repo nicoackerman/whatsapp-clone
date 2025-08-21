@@ -1,10 +1,10 @@
 import { ConvexError, v } from "convex/values";
-import { internalQuery, mutation, query, QueryCtx } from "./_generated/server";
+import { internalQuery, mutation, type QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import { getAuthenticatedUser } from "./lib/auth-helpers";
 import { getLastChannelMessage } from "./lib/messages-helper";
-import { ChannelSummary } from "./types";
+import type { ChannelSummary } from "./types";
 
 /*
 **********

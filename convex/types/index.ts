@@ -1,4 +1,4 @@
-import { Doc, Id } from "../_generated/dataModel";
+import type { Doc, Id } from "../_generated/dataModel";
 
 export interface ChannelSummary {
   channelIdentifier: Id<"channels">;
