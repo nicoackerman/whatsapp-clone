@@ -7,15 +7,21 @@ import {
 } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { Doc } from "./_generated/dataModel";
-import type { PublicProfile } from "./users";
+import { getAuthenticatedUser } from "./lib/auth-helpers";
+import { ChannelSummary, SafeUser } from "./types";
 
-export type Messages = Omit<
-  Doc<"messages">,
-  "senderIdentifier" | "channelIdentifier"
-> & {
-  iamOwner: boolean;
-  owner: PublicProfile;
-};
+/*
+**********
+CORE
+**********
+*/
+
+/**
+ * Creates a new channel object in db
+ * @param type is the type of channel: either server or thread
+ * @param  recieversIdentifier an array of all channel members ids
+ * @returns an id for the created channel
+ */
 
 export const create = internalMutation({
   args: {
@@ -23,7 +29,7 @@ export const create = internalMutation({
     recieversIdentifier: v.array(v.id("users")),
   },
   async handler(ctx, args) {
-    await getAuthenticathedUser(ctx);
+    await getAuthenticatedUser(ctx);
     const channelIdentifier = await ctx.db.insert("channels", {
       type: args.type,
     });
@@ -38,9 +44,14 @@ export const create = internalMutation({
   },
 });
 
+/**
+ * gets all the channels in which the current user is a member
+ * @returns an array of channels
+ */
+
 export const get = internalQuery({
   async handler(ctx) {
-    await getAuthenticathedUser(ctx);
+    await getAuthenticatedUser(ctx);
 
     // gets all current user's references (userChannels object)
     const channelRefs: Doc<"userChannels">[] = await ctx.runQuery(
@@ -59,10 +70,35 @@ export const get = internalQuery({
   },
 });
 
+/**
+ * Gets the channel summaries of the current user
+ * @returns an array of objects of type ChannelSummary
+ */
+
+export const getChannelSummaries = query({
+  async handler(ctx) {
+    const threadSummaries = await ctx.runQuery(
+      internal.threads.getChatSummaries,
+    );
+    const serverSummaries = await ctx.runQuery(
+      internal.servers.getChatSummaries,
+    );
+
+    const summaries: ChannelSummary[] = threadSummaries.concat(serverSummaries);
+    return summaries;
+  },
+});
+
+/**
+ * Get all members of a channel
+ * @param channelIdentifier is a channel id
+ * @returns an array of users that are recievers of a channel
+ */
+
 export const getRecivers = query({
   args: { channelIdentifier: v.id("channels") },
   async handler(ctx, args) {
-    await getAuthenticathedUser(ctx);
+    await getAuthenticatedUser(ctx);
 
     const users: Doc<"users">[] = await ctx.runQuery(
       internal.userChannels.getUsersByChannel,
@@ -73,10 +109,16 @@ export const getRecivers = query({
   },
 });
 
+/**
+ * Get the enriched messages of a given channel (useful for ui purpuses)
+ * @param channelIdentifier is a channel id
+ * @returns an array of messages of type EnrichedMessages
+ */
+
 export const getMessages = query({
   args: { channelIdentifier: v.id("channels") },
   async handler(ctx, args) {
-    const { user } = await getAuthenticathedUser(ctx);
+    const { user } = await getAuthenticatedUser(ctx);
 
     // gets all the object messages in the db
     const _messages: Doc<"messages">[] = await ctx.runQuery(
@@ -88,7 +130,7 @@ export const getMessages = query({
     // the data from messages in a single query
     const messages = Promise.all(
       _messages.map(async (_message) => {
-        const owner: PublicProfile = await ctx.runQuery(
+        const owner: SafeUser = await ctx.runQuery(
           internal.users.getPublicProfile,
           {
             userIdentifier: _message.senderIdentifier,
@@ -105,23 +147,27 @@ export const getMessages = query({
     return messages;
   },
 });
+/*
+**********
+HELPERS
+**********
+*/
 
-const getAuthenticathedUser = async (ctx: QueryCtx) => {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) {
-    throw new ConvexError("Unauthorized");
-  }
+/**
+ * Retrieves all channels associated with the authenticated user.
+ *
+ * Executes an internal query to fetch the user's channels from the database.
+ *
+ * @param ctx - The Convex query context
+ * @returns A list of channel documents associated with the user
+ * @throws ConvexError if the user's channels cannot be retrieved
+ */
 
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_tokenIdentifier", (q) =>
-      q.eq("tokenIdentifier", identity.tokenIdentifier),
-    )
-    .unique();
+const getUserChannels = async (ctx: QueryCtx) => {
+  const channels = await ctx.runQuery(internal.channels.get);
 
-  if (!user) {
-    throw new ConvexError("User not found");
-  }
+  if (!channels)
+    throw new ConvexError("It was not possible to access user's channels");
 
-  return { user, identity };
+  return channels;
 };
