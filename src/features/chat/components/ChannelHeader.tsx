@@ -1,12 +1,11 @@
 "use client";
 import { UserAvatar } from "~/components/ui/user-avatar";
+import UserName from "~/components/ui/user-name";
 import { ChatHeader } from "~/features/chat/components/ui/ChatHeader";
 import DebugTrigger from "~/features/debug/components/DebugTrigger";
 export default function ChannelHeader({
   ...props
 }: React.ComponentProps<"div">) {
-  // const currentThreadMeta = useChatStore((state) => state.currentChannelIdentifier)!;
-
   return (
     <ChatHeader {...props}>
       <ChatHeader.Left>
@@ -15,6 +14,7 @@ export default function ChannelHeader({
           userName={"userName"}
           profileImg={"https://github.com/evilrabbit.png"}
         />
+        <UserName username="User" />
       </ChatHeader.Left>
       <ChatHeader.Right>
         <ChatHeader.Menu>

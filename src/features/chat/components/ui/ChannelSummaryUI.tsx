@@ -9,7 +9,7 @@ import type { ChannelIdentifier } from "~/types";
 interface ChannelSummaryProps {
   onView: boolean;
   profileImg: string;
-  userName: string;
+  channelName: string;
   lastMessage: string;
   channelIdentifier: ChannelIdentifier;
   setAsCurrentThread: (newThreadId: ChannelIdentifier) => void;
@@ -18,7 +18,7 @@ interface ChannelSummaryProps {
 export default function ChannelSummaryUI({
   onView,
   profileImg,
-  userName,
+  channelName,
   lastMessage,
   channelIdentifier,
   setAsCurrentThread,
@@ -35,11 +35,11 @@ export default function ChannelSummaryUI({
     <Button className={clsx(baseStyles, activeStyles)} onClick={handleClick}>
       <UserAvatar
         className="size-10"
-        userName={userName}
+        userName={channelName}
         profileImg={profileImg}
       />
       <div className="flex grow flex-col items-start overflow-hidden text-left">
-        <h3 className="text-base font-medium">{userName}</h3>
+        <h3 className="text-base font-medium">{channelName}</h3>
         <p className="text-soft-gray dark:text-soft-white line-clamp-1 max-w-50 truncate text-sm">
           {lastMessage}
         </p>

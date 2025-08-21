@@ -83,7 +83,7 @@ export const create = mutation({
  * @throws {ConvexError} If the user is not authenticated.
  */
 
-export const getChatSummaries = query({
+export const getChatSummaries = internalQuery({
   async handler(ctx) {
     await getAuthenticatedUser(ctx);
 

@@ -5,9 +5,6 @@ import {
   query,
   type QueryCtx,
 } from "./_generated/server";
-import type { Doc } from "./_generated/dataModel";
-
-export type PublicProfile = Omit<Doc<"users">, "_creationTime" | "tokenIdentifier">;
 
 /* CRUD */
 export const create = internalMutation({

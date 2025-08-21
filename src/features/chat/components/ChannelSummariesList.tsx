@@ -1,21 +1,20 @@
 "use client";
 import { useConvexAuth, useQuery } from "convex/react";
-import ChannelSummaryWrapper from "./ChannelSummaryWrapper";
 import { api } from "@/convex/_generated/api";
 import {
   ChatListSkeleton,
   NoChannelsAvailable,
-} from "./ChatPreviewSkeletons";
+} from "./ui/ChatPreviewSkeletons";
+import ChannelSummaryWrapper from "./ui/ChannelSummaryWrapper";
 
 export default function ChannelSummariesList() {
   const { isLoading, isAuthenticated } = useConvexAuth();
-  // const serversSummaries = useQuery(api.servers.)
-  const threadSummaries = useQuery(
-    api.threads.getSummary,
+  const channelSummaries = useQuery(
+    api.channels.getChannelSummaries,
     isLoading || !isAuthenticated ? "skip" : undefined,
   );
 
-  if (!threadSummaries) {
+  if (!channelSummaries) {
     return (
       <div className="flex grow flex-col space-y-3">
         <ChatListSkeleton />
@@ -23,7 +22,7 @@ export default function ChannelSummariesList() {
     );
   }
 
-  if (threadSummaries.length == 0) {
+  if (channelSummaries.length == 0) {
     return (
       <div className="flex grow flex-col space-y-3">
         <NoChannelsAvailable />
@@ -31,7 +30,7 @@ export default function ChannelSummariesList() {
     );
   }
 
-  const channels = [...threadSummaries];
+  const channels = [...channelSummaries];
   return (
     <div className="flex grow flex-col space-y-3">
       {channels.map((summary) => (
