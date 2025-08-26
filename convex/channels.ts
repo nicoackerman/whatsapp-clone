@@ -7,7 +7,7 @@ import {
 } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { Doc } from "./_generated/dataModel";
-import { getAuthenticatedUser } from "./lib/auth-helpers";
+import { getAuthenticatedUser } from "./lib/auth_helpers";
 import type { ChannelSummary, SafeUser } from "./types";
 
 /*
