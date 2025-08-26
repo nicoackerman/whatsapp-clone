@@ -11,6 +11,6 @@ export type MessageIdentifier = MessageDoc["_id"];
 export type MessageContent = MessageDoc["content"];
 
 export type UserDoc = Doc<"users">;
-export type UserIdentfier = UserDoc["_id"];
+export type UserIdentifier = UserDoc["_id"];
 
 export type ChannelPreview = ChannelSummary;
