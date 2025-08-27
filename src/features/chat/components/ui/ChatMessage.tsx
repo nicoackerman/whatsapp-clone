@@ -44,15 +44,17 @@ const Content = () => {
 
 const MessageRight = ({ children }: { children: React.ReactNode }) => (
   <div className="flex w-full justify-end">
-    <div className="bg-light-green dark:bg-dark-green mb-4 flex max-w-1/2 min-w-[120px] flex-col justify-end rounded-sm p-2">
+    <div className="bg-light-green dark:bg-dark-green mb-4 flex max-w-1/2 min-w-[180px] flex-col justify-end rounded-sm p-2">
       {children}
     </div>
   </div>
 );
 
 const MessageLeft = ({ children }: { children: React.ReactNode }) => (
-  <div className="dark:bg-secondary-black mb-4 flex max-w-1/2 min-w-[120px] justify-start rounded-xs bg-gray-200">
-    {children}
+  <div className="flex w-full justify-start">
+    <div className="bg-light-green dark:bg-dark-green mb-4 flex max-w-1/2 min-w-[180px] flex-col justify-end rounded-sm p-2">
+      {children}
+    </div>
   </div>
 );
 
