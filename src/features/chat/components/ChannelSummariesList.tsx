@@ -6,6 +6,7 @@ import {
   NoChannelsAvailable,
 } from "./ui/ChatPreviewSkeletons";
 import ChannelSummaryWrapper from "./ui/ChannelSummaryWrapper";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 export default function ChannelSummariesList() {
   const { isLoading, isAuthenticated } = useConvexAuth();
@@ -32,13 +33,15 @@ export default function ChannelSummariesList() {
 
   const channels = [...channelSummaries];
   return (
-    <div className="flex grow flex-col space-y-3">
-      {channels.map((summary) => (
-        <ChannelSummaryWrapper
-          key={summary.channelIdentifier}
-          summary={summary}
-        />
-      ))}
+    <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
+      <ScrollArea className="size-full">
+        {channels.map((summary) => (
+          <ChannelSummaryWrapper
+            key={summary.channelIdentifier}
+            summary={summary}
+          />
+        ))}
+      </ScrollArea>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function ChannelSummaryUI({
   setAsCurrentThread,
 }: ChannelSummaryProps) {
   const baseStyles =
-    "cursor-pointer flex items-center justify-between gap-3 p-4 h-15 hover:bg-ghost-gray dark:text-white";
+    "cursor-pointer flex items-center justify-between gap-3 p-4 h-15 hover:bg-ghost-gray dark:text-white w-full";
   const activeStyles = onView ? "bg-ghost-gray" : "bg-transparent";
 
   const handleClick = () => {

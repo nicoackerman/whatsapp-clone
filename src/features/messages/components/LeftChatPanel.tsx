@@ -1,4 +1,3 @@
-import { ScrollArea } from "~/components/ui/scroll-area";
 import { MoreVertical } from "lucide-react";
 import { BubbleIcon } from "~/components/ui/bubble-icon";
 import Link from "next/link";
@@ -15,9 +14,7 @@ export function LeftChatPanel() {
         </Link>
         <BubbleIcon Icon={MoreVertical} variant={"gray"} />
       </div>
-      <ScrollArea className="h-[700px] w-full whitespace-nowrap">
-        <ChannelSummariesList />
-      </ScrollArea>
+      <ChannelSummariesList />
     </div>
   );
 }
