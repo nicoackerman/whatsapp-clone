@@ -1,5 +1,10 @@
 import { v } from "convex/values";
-import { internalQuery, mutation, type QueryCtx } from "./_generated/server";
+import {
+  internalMutation,
+  internalQuery,
+  mutation,
+  type QueryCtx,
+} from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import { getAuthenticatedUser } from "./lib/auth_helpers";
 
@@ -22,6 +27,37 @@ const getLastMessageOfChannel = async (
     .take(1);
   return lastMessage[0];
 };
+
+/**
+ * Deletes all user-channel relations by channel id
+ *
+ * @function deleteByChannel
+ * @param args.channelIdentifier - Unique identifier of the channel
+ *
+ * @throws {ConvexError} If an authentication error or invalid reference occurs
+ *
+ */
+
+export const deleteByChannel = internalMutation({
+  args: {
+    channelIdentifier: v.id("channels"),
+  },
+  async handler(ctx, args) {
+    await getAuthenticatedUser(ctx);
+    const messages = await ctx.db
+      .query("messages")
+      .withIndex("by_channelIdentifier", (q) =>
+        q.eq("channelIdentifier", args.channelIdentifier),
+      )
+      .collect();
+
+    await Promise.all(
+      messages.map(async (message) => {
+        await ctx.db.delete(message._id);
+      }),
+    );
+  },
+});
 
 /**
  * Creates a new message in a channel.

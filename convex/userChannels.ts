@@ -54,7 +54,7 @@ export const get = internalQuery({
   async handler(ctx) {
     const { user } = await getAuthenticatedUser(ctx);
 
-    let channels = await ctx.db
+    const channels = await ctx.db
       .query("userChannels")
       .withIndex("by_userIdentifier", (q) => q.eq("userIdentifier", user._id))
       .collect();
@@ -62,6 +62,35 @@ export const get = internalQuery({
   },
 });
 
+/**
+ * Deletes all user-channel relations by channel id
+ *
+ * @function deleteByChannel
+ * @param args.channelIdentifier - Unique identifier of the channel
+ *
+ * @throws {ConvexError} If an authentication error or invalid reference occurs
+ *
+ */
+
+export const deleteByChannel = internalMutation({
+  args: {
+    channelIdentifier: v.id("channels"),
+  },
+  async handler(ctx, args) {
+    await getAuthenticatedUser(ctx);
+    const relations = await ctx.db
+      .query("userChannels")
+      .withIndex("by_channelIdentifier", (q) =>
+        q.eq("channelIdentifier", args.channelIdentifier),
+      )
+      .collect();
+    await Promise.all(
+      relations.map(async (relation) => {
+        await ctx.db.delete(relation._id);
+      }),
+    );
+  },
+});
 /**
  * Retrieves the receivers of a channel (the users associated with the channel,
  * excluding the authenticated user making the request).
@@ -106,10 +135,10 @@ export const getUsersByChannel = internalQuery({
     channelIdentifier: v.id("channels"),
   },
   async handler(ctx, args) {
-    const { user } = await getAuthenticatedUser(ctx);
+    await getAuthenticatedUser(ctx);
 
     // Gets the channel and user relations by channel id
-    let relationsOfChannel = await ctx.db
+    const relationsOfChannel = await ctx.db
       .query("userChannels")
       .withIndex("by_channelIdentifier", (q) =>
         q.eq("channelIdentifier", args.channelIdentifier),
@@ -117,7 +146,7 @@ export const getUsersByChannel = internalQuery({
       .collect();
 
     // Gets the users associated to a channel
-    let recievers = (
+    const recievers = (
       await Promise.all(
         relationsOfChannel.map(async (relation) => {
           const recievier = await ctx.db

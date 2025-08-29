@@ -2,6 +2,7 @@ import { ConvexError, v } from "convex/values";
 import {
   internalMutation,
   internalQuery,
+  mutation,
   query,
   type QueryCtx,
 } from "./_generated/server";
@@ -67,6 +68,34 @@ export const get = internalQuery({
     );
 
     return channels;
+  },
+});
+
+/**
+ * gets all the channels in which the current user is a member
+ * @returns an array of channels
+ */
+
+export const deleteByIdentifier = mutation({
+  args: {
+    channelIdentifier: v.id("channels"),
+  },
+  async handler(ctx, args) {
+    await getAuthenticatedUser(ctx);
+
+    // delete the channel document
+    await ctx.db.delete(args.channelIdentifier);
+
+    // delete the userChannel documents that were asosociated to this channel
+    // this will make the recievers to have no access to the elimnated channel
+    await ctx.runMutation(internal.userChannels.deleteByChannel, {
+      channelIdentifier: args.channelIdentifier,
+    });
+
+    // delete all message documents that were asosociated to this channel
+    await ctx.runMutation(internal.messages.deleteByChannel, {
+      channelIdentifier: args.channelIdentifier,
+    });
   },
 });
 
