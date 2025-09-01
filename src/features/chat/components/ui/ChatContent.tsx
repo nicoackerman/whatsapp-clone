@@ -3,6 +3,7 @@
 import { ScrollArea } from "~/components/ui/scroll-area";
 import type { MessageDoc } from "~/types";
 import ChatMessage from "./ChatMessage";
+import { useEffect, useRef } from "react";
 
 export function ChatContent({
   children,
@@ -15,11 +16,17 @@ export function ChatContent({
 }
 
 export function MessageList({ messages }: { messages: MessageDoc[] }) {
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   return (
     <ScrollArea className="size-full">
       {messages.map((message: MessageDoc) => (
         <ChatMessage key={message._id} message={message} />
       ))}
+      <div ref={bottomRef} />
     </ScrollArea>
   );
 }
