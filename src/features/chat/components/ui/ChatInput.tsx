@@ -40,7 +40,9 @@ interface MessageComposerProviderProps {
   children: React.ReactNode;
 }
 
-function MessageComposerProvider({ children }: Readonly<MessageComposerProviderProps>) {
+function MessageComposerProvider({
+  children,
+}: Readonly<MessageComposerProviderProps>) {
   const { sendMessage, setMessage, messageContent } = useMessager();
 
   const contextResources = React.useMemo<ContextResources>(() => {
@@ -106,13 +108,19 @@ ChatInput.SendButton = function SendButton({
 };
 
 ChatInput.TypingBar = function TypingBar() {
-  const { setMessage, messageContent } = useMessageComponser();
+  const { setMessage, messageContent, sendMessage } = useMessageComponser();
+  const handleTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == "Enter") {
+      sendMessage();
+    }
+  };
   return (
     <Input
       onChange={(e) => setMessage(e.target.value)}
       value={messageContent}
       className="border-none"
       placeholder="type your message"
+      onKeyDown={handleTyping}
     />
   );
 };

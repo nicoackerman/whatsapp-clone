@@ -24,7 +24,6 @@ export function useChannelMessages() {
   const loading = isLoading && !messages;
   return { loading, messages };
 }
-
 export default function ChannelContent() {
   const { loading, messages } = useChannelMessages();
 
