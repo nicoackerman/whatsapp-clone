@@ -109,9 +109,9 @@ ChatInput.SendButton = function SendButton({
 
 ChatInput.TypingBar = function TypingBar() {
   const { setMessage, messageContent, sendMessage } = useMessageComponser();
-  const handleTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleTyping = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key == "Enter") {
-      sendMessage();
+      await sendMessage();
     }
   };
   return (
